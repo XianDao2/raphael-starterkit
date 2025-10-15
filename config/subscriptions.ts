@@ -4,7 +4,7 @@ export const SUBSCRIPTION_TIERS: ProductTier[] = [
   {
     name: "Starter",
     id: "tier-hobby",
-    productId: "prod_63JTQmsUcQrlZe94IL76fI", // $11 monthly subscription
+    productId: "prod_5Kqq7BxbLyxmO1sM0Pc5LY", // $11 monthly subscription
     priceMonthly: "$11",
     description: "Perfect for individual developers and small projects.",
     features: [
@@ -21,8 +21,8 @@ export const SUBSCRIPTION_TIERS: ProductTier[] = [
   {
     name: "Business",
     id: "tier-pro",
-    productId: "prod_6rOJtTwlyjsH9AVuSzh8aR", // $29 monthly subscription (测试产品)
-    priceMonthly: "$29",
+    productId: "prod_5Kqq7BxbLyxmO1sM0Pc5LY", // $29 monthly subscription (测试产品)
+    priceMonthly: "$10",
     description: "Ideal for growing businesses and development teams.",
     features: [
       "Everything in Starter",
