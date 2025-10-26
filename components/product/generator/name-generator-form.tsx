@@ -57,7 +57,7 @@ export default function NameGeneratorForm({ onGenerate, isGenerating, hasTriedFr
   const { user } = useUser();
   const subscriptionData = useSubscription();
   const { credits: userCredits, loading: creditsLoading } = useCredits();
-  
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -82,7 +82,7 @@ export default function NameGeneratorForm({ onGenerate, isGenerating, hasTriedFr
         namePreferences: savedFormData.namePreferences || "",
         planType: "1", // Always default to standard
       });
-      
+
       toast({
         title: "Welcome back!",
         description: "Your previous form data has been restored. You can modify it and generate again.",
@@ -129,7 +129,7 @@ export default function NameGeneratorForm({ onGenerate, isGenerating, hasTriedFr
             Tell us about yourself and let our AI create a name that resonates with your identity.
           </CardDescription>
         </CardHeader>
-        
+
         <CardContent className="space-y-6">
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             {/* Your Name Field */}
@@ -252,9 +252,9 @@ export default function NameGeneratorForm({ onGenerate, isGenerating, hasTriedFr
             </div>
 
             {/* Submit Button */}
-            <Button 
-              type="submit" 
-              disabled={isGenerating || (user && !hasEnoughCredits)}
+            <Button
+              type="submit"
+              disabled={isGenerating || (!!user && !hasEnoughCredits)}
               className="w-full h-14 text-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-200"
             >
               {isGenerating ? (

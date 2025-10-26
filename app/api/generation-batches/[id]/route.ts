@@ -4,19 +4,19 @@ import { createClient } from '@/utils/supabase/server';
 // Get specific batch with pagination by generation rounds
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const supabase = await createClient();
-    
+
     // Check authentication
     const { data: { user }, error: authError } = await supabase.auth.getUser();
-    
+
     if (authError || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const batchId = params.id;
+    const { id: batchId } = await params;
     const searchParams = request.nextUrl.searchParams;
     const round = parseInt(searchParams.get('round') || '1');
 
@@ -28,7 +28,7 @@ export async function GET(
       .select('*')
       .eq('batch_id', batchId)
       .limit(10);
-    
+
     console.log('Debug - All names for batch (ignoring round):', {
       count: allNames?.length || 0,
       error: allNamesError?.message,
@@ -44,14 +44,14 @@ export async function GET(
         .eq('id', batchId)
         .eq('user_id', user.id)
         .single(),
-      
+
       // Get names - start with simple query, add generation_round if it works
       supabase
         .from('generated_names')
         .select('*')
         .eq('batch_id', batchId)
         .order('position_in_batch', { ascending: true }),
-      
+
       // Get total number of rounds in this batch
       supabase
         .from('generated_names')
@@ -89,10 +89,10 @@ export async function GET(
 
     // Ensure totalRounds is always a valid positive integer
     const totalRounds = Math.max(1, roundsData?.generation_round || 1);
-    
+
     // Validate round parameter
     const validRound = Math.max(1, Math.min(round, totalRounds));
-    
+
     // If the requested round is invalid, redirect to valid round
     if (round !== validRound) {
       console.log(`Invalid round ${round}, redirecting to ${validRound}`);
@@ -100,7 +100,7 @@ export async function GET(
 
     // Transform data to match frontend expectations with validation
     console.log('API Debug - Raw names data sample:', names?.slice(0, 2));
-    
+
     const transformedNames = (names || []).map((name, index) => {
       const transformed = {
         chinese: name.chinese_name || '',
@@ -111,17 +111,17 @@ export async function GET(
         personalityMatch: name.personality_match || '',
         style: name.style || 'Standard'
       };
-      
+
       if (index === 0) {
         console.log('API Debug - First name transformation:', {
           original: name,
           transformed
         });
       }
-      
+
       return transformed;
     }).filter(name => name.chinese); // Filter out invalid names
-    
+
     console.log('API Debug - Final transformed names count:', transformedNames.length);
 
     const batchInfo = {

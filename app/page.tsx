@@ -39,7 +39,7 @@ export default function Home() {
   const router = useRouter();
   const { user, loading } = useUser();
   const { toast } = useToast();
-  
+
   // UI state
   const [isGenerating, setIsGenerating] = useState(false);
   const [hasTriedFree, setHasTriedFree] = useState(false);
@@ -109,7 +109,7 @@ export default function Home() {
       }
 
       // Calculate total rounds based on generation round
-      const estimatedTotalRounds = data.isContinuation 
+      const estimatedTotalRounds = data.isContinuation
         ? Math.ceil(data.batch.totalNamesGenerated / 6)
         : data.generationRound;
 
@@ -122,9 +122,9 @@ export default function Home() {
         totalGenerationRounds: estimatedTotalRounds,
         isHistoryMode: false,
       };
-      
+
       sessionStorage.setItem('nameGenerationResults', JSON.stringify(sessionData));
-      
+
       // Mark free trial as used for non-authenticated users
       if (!user) {
         setHasTriedFree(true);
@@ -144,7 +144,7 @@ export default function Home() {
         title: data.message || "Names generated successfully!",
         description: `Generated ${data.names.length} unique Chinese names${data.creditsUsed ? ` using ${data.creditsUsed} credits` : ' for free'}`,
       });
-      
+
       // Navigate to results page
       router.push('/results');
     } catch (error) {
@@ -186,17 +186,17 @@ export default function Home() {
                 <span className="mr-2">🇨🇳</span>
                 AI-Powered Chinese Name Generation
               </div>
-              
+
               <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl md:text-6xl lg:text-7xl">
                 Discover Your Perfect
                 <br />
                 <span className="text-primary">Chinese Name</span>
               </h1>
-              
+
               <p className="mt-6 text-xl text-muted-foreground md:text-2xl max-w-3xl mx-auto">
                 Create your authentic Chinese identity with our advanced AI that understands cultural significance, personal meaning, and traditional naming conventions.
               </p>
-              
+
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -218,8 +218,8 @@ export default function Home() {
                   Random Name Generator
                 </button>
               </motion.div>
-              
-              <motion.div 
+
+              <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.4 }}
@@ -263,13 +263,13 @@ export default function Home() {
               </div>
 
               <div id="name-generator-form" data-name-generator-form>
-                <NameGeneratorForm 
+                <NameGeneratorForm
                   onGenerate={handleGenerate}
                   isGenerating={isGenerating}
                   hasTriedFree={hasTriedFree}
                   savedFormData={savedFormData}
                 />
-                
+
                 {/* Personal Center Button for authenticated users */}
                 {user && (
                   <motion.div
@@ -318,7 +318,7 @@ export default function Home() {
                 Advanced AI technology combined with deep cultural understanding to create meaningful Chinese names that truly represent you.
               </p>
             </motion.div>
-            
+
             <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -336,7 +336,7 @@ export default function Home() {
                   </p>
                 </div>
               </motion.div>
-              
+
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -353,7 +353,7 @@ export default function Home() {
                   </p>
                 </div>
               </motion.div>
-              
+
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -376,9 +376,22 @@ export default function Home() {
       </section>
 
       {/* Pricing Section */}
-      <div id="pricing">
-        <ChineseNamePricing onScrollToForm={scrollToForm} />
-      </div>
+      <section id="pricing" className="py-20 bg-gradient-to-b from-muted/10 to-background">
+        <div className="container px-4 md:px-6">
+          <div className="mx-auto max-w-5xl text-center space-y-6">
+            <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">Pricing</h2>
+            <p className="text-muted-foreground">查看 Premium 与 Ultimate 订阅，解锁更快更高清的生成体验。</p>
+            <div className="flex justify-center">
+              <button
+                onClick={() => router.push("/pricing")}
+                className="inline-flex h-11 items-center justify-center rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90"
+              >
+                查看定价与升级
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
 
 
       {/* Final CTA Section */}
@@ -400,13 +413,13 @@ export default function Home() {
                 Join thousands who have found their authentic Chinese identity.
               </p>
               <div className="flex flex-col sm:flex-row justify-center gap-4 pt-4">
-                <button 
+                <button
                   onClick={scrollToForm}
                   className="inline-flex items-center justify-center h-14 px-8 text-lg font-medium bg-primary text-primary-foreground hover:bg-primary/90 rounded-md transition-colors shadow-lg"
                 >
                   {loading ? 'Loading...' : !user ? (hasTriedFree ? '🔒 Sign In for Unlimited Names' : '🎁 Get Your Free Chinese Name') : '🎯 Generate Chinese Name'}
                 </button>
-                <a 
+                <a
                   href="#chinese-name-pricing"
                   className="inline-flex items-center justify-center h-14 px-8 text-lg font-medium text-muted-foreground hover:text-foreground transition-colors"
                 >

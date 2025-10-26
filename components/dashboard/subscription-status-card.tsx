@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { SubscriptionPortalDialog } from "./subscription-portal-dialog";
 import { SubscriptionState } from "@/types/subscriptions";
+import { SUBSCRIPTION_TIERS } from "@/config/subscriptions";
 
 type StatusConfig = {
   color: string;
@@ -104,6 +105,7 @@ type SubscriptionStatusCardProps = {
   subscription?: {
     status: string;
     current_period_end: string;
+    creem_product_id: string;
   } | null;
 };
 
@@ -120,14 +122,18 @@ export function SubscriptionStatusCard({
           <p className="text-sm text-muted-foreground">Subscription Status</p>
           {subscription && (
             <h3
-              className={`text-2xl font-bold capitalize mt-1 ${
-                getStatusConfig(
-                  subscription.status,
-                  subscription.current_period_end
-                ).color
-              }`}
+              className={`text-2xl font-bold capitalize mt-1 ${getStatusConfig(
+                subscription.status,
+                subscription.current_period_end
+              ).color
+                }`}
             >
-              {subscription.status}
+              {(() => {
+                const tier = SUBSCRIPTION_TIERS.find(
+                  (t) => t.productId === subscription.creem_product_id
+                );
+                return tier ? tier.name : subscription.status;
+              })()}
             </h3>
           )}
           {!subscription && (

@@ -4,36 +4,38 @@ export const SUBSCRIPTION_TIERS: ProductTier[] = [
   {
     name: "Premium",
     id: "tier-premium",
-    productId: "prod_5Kqq7BxbLyxmO1sM0Pc5LY", // $10 monthly subscription
+    productId: "prod_5Kqq7BxbLyxmO1sM0Pc5LY", // $10 monthly subscription// $10 monthly subscription
     priceMonthly: "$10",
-    description: "适合个人用户的优质订阅方案。",
+    description: "2,000 credits / mo · No ads · No watermark · Fast generation (5x).",
     features: [
-      "完整的功能访问",
-      "每月固定额度",
-      "优先处理",
-      "基本客户支持",
-      "多设备同步",
-      "数据安全保障",
+      "2,000 credits per month",
+      "Unlimited image generation",
+      "Fast generation (5x speed)",
+      "No ads, no watermarks",
+      "Fast AI Photo Editor (2x speed)",
     ],
     featured: false,
-    discountCode: "", // 可选折扣码
+    discountCode: "",
   },
   {
     name: "Ultimate",
     id: "tier-ultimate",
-    productId: "prod_6gRB7gyIkL0pvN7wG6iAjp", // $10 monthly subscription
-    priceMonthly: "$10",
-    description: "适合专业用户的顶级订阅方案。",
+    productId: "prod_5Kqq7BxbLyxmO1sM0Pc5LY", // $20 monthly subscription
+    priceMonthly: "$20",
+    description: "5,000 credits / mo · Fastest generation · HD images · Private generation.",
     features: [
-      "全部Premium功能",
-      "更多使用额度",
-      "优先客户支持",
-      "高级分析工具",
-      "定制化选项",
-      "专属服务",
+      "5,000 credits per month",
+      "Unlimited image generation",
+      "Fastest generation",
+      "Instant AI Photo Editor (5x speed)",
+      "No ads, no watermarks",
+      "Advanced Refine feature",
+      "Private generation",
+      "HD image generation",
+      "Early access to new features",
     ],
     featured: true,
-    discountCode: "", // 可选折扣码
+    discountCode: "",
   },
 ];
 

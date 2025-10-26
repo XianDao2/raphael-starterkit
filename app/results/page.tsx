@@ -34,7 +34,7 @@ interface FormData {
 
 interface SessionData {
   names: NameData[];
-  formData: FormData;
+  formData: FormData | null;
   batch: any;
   generationRound: number;
   totalGenerationRounds: number;
@@ -45,17 +45,17 @@ export default function ResultsPage() {
   const router = useRouter();
   const { user, loading } = useUser();
   const { toast } = useToast();
-  
+
   const [generatedNames, setGeneratedNames] = useState<NameData[]>([]);
-  
+
   // Current batch state
   const [currentBatch, setCurrentBatch] = useState<any | null>(null);
   const [currentGenerationRound, setCurrentGenerationRound] = useState(1);
   const [totalGenerationRounds, setTotalGenerationRounds] = useState(1);
-  
+
   // History browsing state (for different batches)
   const [isInHistoryMode, setIsInHistoryMode] = useState(false);
-  
+
   // UI state
   const [isGenerating, setIsGenerating] = useState(false);
   const [currentFormData, setCurrentFormData] = useState<FormData | null>(null);
@@ -79,7 +79,7 @@ export default function ResultsPage() {
         }
 
         const sessionData: SessionData = JSON.parse(sessionDataStr);
-        
+
         // Restore state from sessionStorage
         setGeneratedNames(sessionData.names || []);
         setCurrentFormData(sessionData.formData || null);
@@ -87,7 +87,7 @@ export default function ResultsPage() {
         setCurrentGenerationRound(sessionData.generationRound || 1);
         setTotalGenerationRounds(sessionData.totalGenerationRounds || 1);
         setIsInHistoryMode(sessionData.isHistoryMode || false);
-        
+
         setIsDataLoaded(true);
       } catch (error) {
         console.error('Failed to load session data:', error);
@@ -114,7 +114,7 @@ export default function ResultsPage() {
         totalGenerationRounds,
         isHistoryMode: isInHistoryMode,
       };
-      
+
       sessionStorage.setItem('nameGenerationResults', JSON.stringify(sessionData));
     }
   }, [generatedNames, currentFormData, currentBatch, currentGenerationRound, totalGenerationRounds, isInHistoryMode, isDataLoaded]);
@@ -133,13 +133,13 @@ export default function ResultsPage() {
 
   const handleGenerate = async (formData: FormData, forceNewBatch = false) => {
     setIsGenerating(true);
-    
+
     // Determine if we need a new batch
-    const needsNewBatch = forceNewBatch || 
-                         isInHistoryMode || 
-                         !currentBatch || 
-                         compareFormParameters(formData, currentFormData);
-    
+    const needsNewBatch = forceNewBatch ||
+      isInHistoryMode ||
+      !currentBatch ||
+      compareFormParameters(formData, currentFormData);
+
     // If creating new batch, update form data and exit history mode
     if (needsNewBatch) {
       setCurrentFormData(formData);
@@ -181,17 +181,17 @@ export default function ResultsPage() {
 
       // Set current generated names
       setGeneratedNames(data.names);
-      
+
       // Update batch and round information
       if (data.batch) {
         setCurrentBatch(data.batch);
         setCurrentGenerationRound(data.generationRound);
-        
+
         // Calculate total rounds based on total names / 6 (names per round)
-        const estimatedTotalRounds = data.isContinuation 
+        const estimatedTotalRounds = data.isContinuation
           ? Math.ceil(data.batch.totalNamesGenerated / 6)
           : data.generationRound;
-        
+
         setTotalGenerationRounds(estimatedTotalRounds);
       }
 
@@ -221,7 +221,7 @@ export default function ResultsPage() {
   // Compare form parameters to determine if new batch is needed
   const compareFormParameters = (newForm: FormData, oldForm: FormData | null): boolean => {
     if (!oldForm) return true; // First generation always creates new batch
-    
+
     return (
       newForm.englishName !== oldForm.englishName ||
       newForm.gender !== oldForm.gender ||
@@ -235,9 +235,9 @@ export default function ResultsPage() {
   // Handle batch-internal round navigation (within same batch)
   const handleRoundChange = async (roundIndex: number) => {
     if (!user || !currentBatch || roundIndex < 1 || roundIndex > totalGenerationRounds) return;
-    
+
     setIsLoadingHistory(true);
-    
+
     try {
       const response = await fetch(`/api/generation-batches/${currentBatch.id}?round=${roundIndex}`);
       if (response.ok) {
@@ -307,7 +307,7 @@ export default function ResultsPage() {
               <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
                 {isInHistoryMode && currentBatch ? (
                   <>
-                    Historical generation for "{currentBatch.englishName}" - 
+                    Historical generation for "{currentBatch.englishName}" -
                     Created on {new Date(currentBatch.createdAt).toLocaleDateString()}
                   </>
                 ) : (

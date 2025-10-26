@@ -30,12 +30,12 @@ yarn-debug.log*
 yarn-error.log*
 
 # local env files
-# .env*.local
-# # .env
+.env*.local
 # .env
-# .env.test
-# .env.production
-# .env.development
+.env
+.env.test
+.env.production
+.env.development
 
 # vercel
 .vercel
@@ -46,4 +46,3 @@ next-env.d.ts
 
 # External reference folder
 Chinesename.club/
-package-lock.json

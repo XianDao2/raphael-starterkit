@@ -25,6 +25,7 @@ export default function Header({ user }: HeaderProps) {
   const mainNavItems: NavItem[] = [
     { label: "Home", href: "/" },
     { label: "Popular Names", href: "/product/popular-names" },
+    { label: "Pricing", href: "/pricing" },
     { label: "About", href: "/product/about" },
   ];
 
@@ -40,7 +41,7 @@ export default function Header({ user }: HeaderProps) {
         <div className="flex items-center">
           <Logo />
         </div>
-        
+
         {/* Centered Navigation */}
         <nav className="hidden md:flex items-center gap-8 absolute left-1/2 transform -translate-x-1/2">
           {navItems.map((item) => (
