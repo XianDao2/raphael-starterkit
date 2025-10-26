@@ -2,55 +2,38 @@ import { ProductTier } from "@/types/subscriptions";
 
 export const SUBSCRIPTION_TIERS: ProductTier[] = [
   {
-    name: "Starter",
-    id: "tier-hobby",
-    productId: "prod_5Kqq7BxbLyxmO1sM0Pc5LY", // $11 monthly subscription
-    priceMonthly: "$11",
-    description: "Perfect for individual developers and small projects.",
+    name: "Premium",
+    id: "tier-premium",
+    productId: "prod_5Kqq7BxbLyxmO1sM0Pc5LY", // $10 monthly subscription
+    priceMonthly: "$10",
+    description: "适合个人用户的优质订阅方案。",
     features: [
-      "Global authentication system",
-      "Database integration",
-      "Secure API routes",
-      "Modern UI components",
-      "Dark/Light mode",
-      "Community forum access",
+      "完整的功能访问",
+      "每月固定额度",
+      "优先处理",
+      "基本客户支持",
+      "多设备同步",
+      "数据安全保障",
     ],
     featured: false,
-    discountCode: "", // Optional discount code
+    discountCode: "", // 可选折扣码
   },
   {
-    name: "Business",
-    id: "tier-pro",
-    productId: "prod_5Kqq7BxbLyxmO1sM0Pc5LY", // $29 monthly subscription (测试产品)
+    name: "Ultimate",
+    id: "tier-ultimate",
+    productId: "prod_6gRB7gyIkL0pvN7wG6iAjp", // $10 monthly subscription
     priceMonthly: "$10",
-    description: "Ideal for growing businesses and development teams.",
+    description: "适合专业用户的顶级订阅方案。",
     features: [
-      "Everything in Starter",
-      "Multi-currency payments",
-      "Priority support",
-      "Advanced analytics",
-      "Custom branding options",
-      "API usage dashboard",
+      "全部Premium功能",
+      "更多使用额度",
+      "优先客户支持",
+      "高级分析工具",
+      "定制化选项",
+      "专属服务",
     ],
     featured: true,
-    discountCode: "", // Optional discount code - 临时移除
-  },
-  {
-    name: "Enterprise",
-    id: "tier-enterprise",
-    productId: "prod_3qPYksZMtk94wQsdkgajrJ", // $99 monthly subscription
-    priceMonthly: "$99",
-    description: "For large organizations with advanced requirements.",
-    features: [
-      "Everything in Business",
-      "Dedicated account manager",
-      "Custom implementation support",
-      "High-volume transaction processing",
-      "Advanced security features",
-      "Service Level Agreement (SLA)",
-    ],
-    featured: false,
-    discountCode: "", // Optional discount code
+    discountCode: "", // 可选折扣码
   },
 ];
 
@@ -58,7 +41,7 @@ export const CREDITS_TIERS: ProductTier[] = [
   {
     name: "Basic Package",
     id: "tier-3-credits",
-    productId: "prod_MqcjVo0Bpx0rbYmHVlrh2", // $9 one-time purchase
+    productId: "prod_5Kqq7BxbLyxmO1sM0Pc5LY", // $9 one-time purchase
     priceMonthly: "$9",
     description: "3 credits for testing and small-scale projects.",
     creditAmount: 3,
@@ -74,7 +57,7 @@ export const CREDITS_TIERS: ProductTier[] = [
   {
     name: "Standard Package",
     id: "tier-6-credits",
-    productId: "prod_4ICkTovEC6o9QY6UuL3aI0", // $13 one-time purchase
+    productId: "prod_5Kqq7BxbLyxmO1sM0Pc5LY", // $13 one-time purchase
     priceMonthly: "$13",
     description: "6 credits for medium-sized applications.",
     creditAmount: 6,
@@ -90,7 +73,7 @@ export const CREDITS_TIERS: ProductTier[] = [
   {
     name: "Premium Package",
     id: "tier-9-credits",
-    productId: "prod_3b3oyQtIJA3eaMIHLNjyCc", // $29 one-time purchase
+    productId: "prod_5Kqq7BxbLyxmO1sM0Pc5LY", // $29 one-time purchase
     priceMonthly: "$29",
     description: "9 credits for larger applications and production use.",
     creditAmount: 9,
