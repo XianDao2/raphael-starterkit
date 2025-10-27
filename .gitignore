@@ -46,3 +46,5 @@ next-env.d.ts
 
 # External reference folder
 Chinesename.club/
+package-lock.json
+pnpm-lock.yaml
