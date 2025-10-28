@@ -204,32 +204,33 @@ export default function AvatarGeneratorPage() {
 
     setIsGenerating(true);
     try {
-      const response = await fetch("/api/generate-avatar", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ style: avatarStyle, description }),
+      // 使用OpenAI客户端调用Kwai-Kolors/Kolors大模型生成图片
+      const client = new OpenAI({
+        baseURL: process.env.OPENAI_BASE_URL || "https://api.siliconflow.cn/v1",
+        apiKey:
+          process.env.OPENROUTER_API_KEY || process.env.OPENAI_API_KEY || "sk-tvcwevarnuxopipulvzsqilteuwbrivzihandabyzprbijhl",
+        dangerouslyAllowBrowser: true
       });
 
-      if (!response.ok) {
-        throw new Error(`HTTP错误: ${response.status}`);
-      }
+      const response = await client.images.generate({
+        model: "Kwai-Kolors/Kolors",
+        prompt: description,
+        negative_prompt: "模糊, 扭曲, 低质量, 不完整",
+        image_size: "1024x1024",
+        num_inference_steps: 20,
+        guidance_scale: 7.5
+      });
 
-      const data = await response.json();
-
-      if (data.success && data.avatarUrl) {
-        setGeneratedAvatarUrl(data.avatarUrl);
+      // OpenAI客户端直接返回结果对象，不需要json()解析
+      if (response && response.data && response.data.length > 0 && response.data[0].url) {
+        setGeneratedAvatarUrl(response.data[0].url);
         toast({ title: "成功", description: "头像生成成功！" });
       } else {
-        toast({
-          title: "生成失败",
-          description: data.error || "无法生成头像，请重试",
-        });
+        throw new Error("无效的API响应格式");
       }
     } catch (error) {
       console.error("生成头像错误:", error);
-      toast({ title: "系统错误", description: "生成头像时发生错误" });
+      toast({ title: "生成失败", description: error instanceof Error ? error.message : "无法生成头像，请重试" });
     } finally {
       setIsGenerating(false);
     }
