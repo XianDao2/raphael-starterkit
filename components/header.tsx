@@ -26,7 +26,7 @@ export default function Header({ user }: HeaderProps) {
     { label: "Home", href: "/" },
     { label: "Popular Names", href: "/product/popular-names" },
     { label: "Pricing", href: "/pricing" },
-    { label: "Avator", href: "/avatar-generator" },
+    { label: "Avatar", href: "/avatar-generator" },
     { label: "About", href: "/product/about" },
     
   ];
