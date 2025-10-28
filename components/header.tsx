@@ -26,7 +26,9 @@ export default function Header({ user }: HeaderProps) {
     { label: "Home", href: "/" },
     { label: "Popular Names", href: "/product/popular-names" },
     { label: "Pricing", href: "/pricing" },
+    { label: "Avator", href: "/avatar-generator" },
     { label: "About", href: "/product/about" },
+    
   ];
 
   // Dashboard items - empty array as we don't want navigation items in dashboard
