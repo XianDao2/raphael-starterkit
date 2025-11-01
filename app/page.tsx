@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import PronunciationGenerator from "@/components/product/pronunciation/pronunciation-generator";
-import ChineseNamePricing from "@/components/product/pricing/chinese-name-pricing";
 
 export default function Home() {
   const router = useRouter();

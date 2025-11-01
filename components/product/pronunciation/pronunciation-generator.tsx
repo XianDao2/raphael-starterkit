@@ -3,17 +3,19 @@
 import React, { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
+import OpenAI from "openai";
 
 interface PronunciationResult {
   chinese: string;
   pinyin: string;
-  englishMatch: string;
-  explanation: string;
-  examples: Array<{
+  chineseIpa: string;
+  englishPhonetic: string;
+  matchedWords: string;
+  pronunciationNote: string;
+  example: {
     chinese: string;
-    pinyin: string;
     english: string;
-  }>;
+  }
 }
 
 export default function PronunciationGenerator() {
@@ -73,37 +75,69 @@ export default function PronunciationGenerator() {
     setIsLoading(true);
     
     try {
-      // 模拟API调用
-      // 实际项目中应该替换为真实的API调用
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // 模拟返回数据
-      const mockResult: PronunciationResult = {
-        chinese: inputText,
-        pinyin: "nǐ hǎo" + (inputText.length > 2 ? "..." : ""),
-        englishMatch: "need how",
-        explanation: "简要解释发音细微差别以及英文单词如何创造相似的发音。重点关注'nǐ'的降升调和'hǎo'的降升调。",
-        examples: [
-          {
-            chinese: "你好，很高兴认识你。",
-            pinyin: "Nǐ hǎo, hěn gāoxìng rènshi nǐ.",
-            english: "Hello, very happy to meet you."
-          },
-          {
-            chinese: "你好吗？",
-            pinyin: "Nǐ hǎo ma?",
-            english: "How are you?"
-          }
-        ]
-      };
-
-      setResult(mockResult);
-      saveRecentQuery(inputText);
-      
-      toast({
-        title: "发音匹配成功",
-        description: `已找到"${inputText}"的英文发音匹配`,
+      // 使用OpenAI库调用大模型
+      const client = new OpenAI({
+        baseURL: process.env.OPENAI_BASE_URL || "https://api.siliconflow.cn/v1",
+        apiKey: 
+          process.env.OPENROUTER_API_KEY || process.env.OPENAI_API_KEY || "sk-tvcwevarnuxopipulvzsqilteuwbrivzihandabyzprbijhl",
+        dangerouslyAllowBrowser: true
       });
+
+      const prompt = `
+ 任务：帮英语母语者（中文零基础，仅熟悉 CEFR A1-B1 级英语常用词）通过英语熟词联想中文发音。 
+ 输入：中文词语 = ${inputText}，带声调拼音 = 需要你输出
+ 要求按以下步骤输出，格式严格遵循 JSON（无额外文字）： 
+ 1. 拼音转国际音标（IPA）：准确标注中文发音（含声调符号，如˨˩）； 
+ 2. IPA 转英语近似音标：映射为英语母语者熟悉的 DJ 音标，剔除英语无对应音的特殊音，保留核心发音； 
+ 3. 匹配英语熟词：按音节拆分拼音，匹配发音相似度≥85%的英语常用词（A1-B1级），多音节则拆分组合（如双音节→2个单词）； 
+ 4. 发音说明：简要说明英语单词与中文拼音的发音关联； 
+ 5. 简单例句：生成1个包含该中文词语的基础例句（中文+英语翻译）。 
+ 
+ 示例输出（必须严格遵循此格式）： 
+ { 
+   "chinese": "你好", 
+   "pinyin": "nǐ hǎo", 
+   "chineseIpa": "/ni˨˩ haʊ˨˩/", 
+   "englishPhonetic": "/niː haʊ/", 
+   "matchedWords": "need how", 
+   "pronunciationNote": "need 发音对应 /niː/（匹配 nǐ 的核心音），how 发音对应 /haʊ/（完全匹配 hǎo 的发音）", 
+   "example": { 
+     "chinese": "你好，很高兴认识你。", 
+     "english": "Hello, nice to meet you." 
+   } 
+ } 
+ 
+ 注意：禁止使用生僻词，单词组合无歧义，例句简洁易懂（适合零基础学习者）。 
+ `;
+
+      const response = await client.chat.completions.create({
+        model: "THUDM/GLM-4.1V-9B-Thinking",
+        messages: [
+          { 
+            role: "user", 
+            content: prompt 
+          }
+        ],
+        stream: false,
+        max_tokens: 4096,
+        temperature: 0.7
+      });
+
+      if (response.choices && response.choices[0] && response.choices[0].message && response.choices[0].message.content) {
+        const apiResponse = response.choices[0].message.content.trim();
+        
+        // 解析JSON响应
+        const parsedResult: PronunciationResult = JSON.parse(apiResponse);
+        setResult(parsedResult);
+        saveRecentQuery(inputText);
+        
+        toast({
+          title: "发音匹配成功",
+          description: `已找到"${inputText}"的英文发音匹配`,
+        });
+      } else {
+        throw new Error("无效的API响应");
+      }
     } catch (error) {
       console.error('搜索错误:', error);
       toast({
@@ -131,19 +165,51 @@ export default function PronunciationGenerator() {
   };
 
   const playChineseAudio = () => {
-    // 这里应该集成真实的音频播放功能
-    toast({
-      title: "播放中文发音",
-      description: `播放"${result?.chinese}"的标准发音`,
-    });
+    // 使用浏览器的Web Speech API实现TTS功能
+    if (result?.chinese && 'speechSynthesis' in window) {
+      const utterance = new SpeechSynthesisUtterance(result.chinese);
+      utterance.lang = 'zh-CN'; // 设置为中文
+      utterance.rate = 0.9; // 稍微放慢速度以便学习者听清楚
+      
+      // 播放前停止可能正在播放的语音
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(utterance);
+      
+      toast({
+        title: "播放中文发音",
+        description: `正在播放"${result.chinese}"的标准发音`,
+      });
+    } else {
+      toast({
+        title: "浏览器不支持",
+        description: "您的浏览器不支持语音合成功能",
+        variant: "destructive"
+      });
+    }
   };
 
   const playEnglishAudio = () => {
-    // 这里应该集成真实的音频播放功能
-    toast({
-      title: "播放英文匹配",
-      description: `播放"${result?.englishMatch}"的发音`,
-    });
+    // 使用浏览器的Web Speech API实现TTS功能
+    if (result?.matchedWords && 'speechSynthesis' in window) {
+      const utterance = new SpeechSynthesisUtterance(result.matchedWords);
+      utterance.lang = 'en-US'; // 设置为英语
+      utterance.rate = 0.9; // 稍微放慢速度以便学习者听清楚
+      
+      // 播放前停止可能正在播放的语音
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(utterance);
+      
+      toast({
+        title: "播放英文匹配",
+        description: `正在播放"${result.matchedWords}"的发音`,
+      });
+    } else {
+      toast({
+        title: "浏览器不支持",
+        description: "您的浏览器不支持语音合成功能",
+        variant: "destructive"
+      });
+    }
   };
 
   return (
@@ -246,13 +312,16 @@ export default function PronunciationGenerator() {
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ duration: 0.5, delay: 0.3 }}
               >
-                <p className="text-5xl font-bold text-primary">"{result.englishMatch}"</p>
+                <p className="text-5xl font-bold text-primary">"{result.matchedWords}"</p>
+                <p className="text-sm text-muted-foreground mt-2">
+                  中文发音: {result.chineseIpa} | 英语近似音: {result.englishPhonetic}
+                </p>
               </motion.div>
               
               {/* 解释文本 */}
               <div>
                 <p className="text-muted-foreground text-base leading-relaxed">
-                  {result.explanation}
+                  {result.pronunciationNote}
                 </p>
               </div>
               
@@ -313,13 +382,11 @@ export default function PronunciationGenerator() {
                     animate={{ opacity: 1, height: 'auto' }}
                     transition={{ duration: 0.3 }}
                   >
-                    {result.examples.map((example, index) => (
-                      <div key={index} className="pb-4 border-b border-border last:border-b-0">
-                        <p className="font-chinese text-lg text-foreground">{example.chinese}</p>
-                        <p className="text-muted-foreground">{example.pinyin}</p>
-                        <p className="text-muted-foreground italic">"{example.english}"</p>
-                      </div>
-                    ))}
+                    <div className="pb-4">
+                      <p className="font-chinese text-lg text-foreground">{result.example.chinese}</p>
+                      <p className="text-muted-foreground">{result.pinyin}</p>
+                      <p className="text-muted-foreground italic">"{result.example.english}"</p>
+                    </div>
                   </motion.div>
                 )}
               </details>
