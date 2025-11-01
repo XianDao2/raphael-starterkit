@@ -24,12 +24,9 @@ export default function Header({ user }: HeaderProps) {
   // Main navigation items for Chinese Name Generator
   const mainNavItems: NavItem[] = [
     { label: "Home", href: "/" },
-    { label: "Popular Names", href: "/product/popular-names" },
-    { label: "Pronunciation", href: "/pronunciation" },
     { label: "Pricing", href: "/pricing" },
     { label: "Avatar", href: "/avatar-generator" },
     { label: "About", href: "/product/about" },
-    
   ];
 
   // Dashboard items - empty array as we don't want navigation items in dashboard
