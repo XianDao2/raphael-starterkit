@@ -70,7 +70,7 @@ export default function PricingPage() {
             const res = await fetch("/api/creem/create-checkout", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ productId, productType: "subscription" }),
+                body: JSON.stringify({ productId, productType: "subscription", creditsAmount: tierId === "tier-premium" ? 1000 : 2000 }),
             });
             if (!res.ok) throw new Error("Failed to create checkout session");
             const { checkoutUrl } = await res.json();

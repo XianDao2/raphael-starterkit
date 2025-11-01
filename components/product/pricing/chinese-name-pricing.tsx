@@ -102,6 +102,7 @@ export default function ChineseNamePricing({ onScrollToForm }: ChineseNamePricin
     try {
       // Integration with the starter kit's payment system
       // This would use the existing Creem.io integration
+      console.log(12)
       const response = await fetch('/api/creem/create-checkout', {
         method: 'POST',
         headers: {
