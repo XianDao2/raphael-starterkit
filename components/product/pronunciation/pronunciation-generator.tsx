@@ -16,6 +16,7 @@ interface PronunciationResult {
     chinese: string;
     english: string;
   };
+  translation?: string; // 用于英文输入模式的中文翻译
 }
 
 export default function PronunciationGenerator() {
@@ -25,6 +26,7 @@ export default function PronunciationGenerator() {
   const [result, setResult] = useState<PronunciationResult | null>(null);
   const [recentQueries, setRecentQueries] = useState<string[]>([]);
   const [showExamples, setShowExamples] = useState(false);
+  const [isChineseToEnglish, setIsChineseToEnglish] = useState(true); // 默认中文到英文模式
 
   // 添加CSS动画 - 仅在客户端执行
   useEffect(() => {
@@ -70,7 +72,7 @@ export default function PronunciationGenerator() {
     if (!inputText.trim()) {
       toast({
         title: "输入不能为空",
-        description: "请输入中文词语或短句",
+        description: isChineseToEnglish ? "请输入中文词语或短句" : "请输入英文词语或句子",
       });
       return;
     }
@@ -88,7 +90,10 @@ export default function PronunciationGenerator() {
         dangerouslyAllowBrowser: true,
       });
 
-      const prompt = `
+      let prompt = "";
+      if (isChineseToEnglish) {
+        // 中文到英文模式
+        prompt = `
 Task: Help English native speakers (beginner Chinese learners, only familiar with CEFR A1-B1 level English words) associate Chinese pronunciation with familiar English words.
 Input: Chinese word = ${inputText}, Pinyin with tone marks = to be output
 Please follow these steps and output in strict JSON format (no extra text):
@@ -114,6 +119,38 @@ Example output (must strictly follow this format):
 
 Note: Avoid using rare words, ensure word combinations have no ambiguity, and make example sentences concise and easy to understand (suitable for beginner learners).
  `;
+      } else {
+        // 英文到中文模式
+        prompt = `
+Task: Translate English text to Chinese and help English native speakers associate Chinese pronunciation with familiar English words.
+Input: English text = ${inputText}
+Please follow these steps and output in strict JSON format (no extra text):
+1. Translate the English text to natural Chinese:
+2. Get Pinyin with tone marks for the translated Chinese;
+3. Convert Pinyin to International Phonetic Alphabet (IPA): Accurately mark Chinese pronunciation (including tone symbols, such as ˨˩);
+4. Convert IPA to English approximate phonetics: Map to DJ phonetics familiar to English native speakers, eliminating special sounds without corresponding English sounds, preserving core pronunciation;
+5. Match English familiar words: Split Pinyin by syllables, match English common words (A1-B1 level) with pronunciation similarity ≥85%, return an array of exactly three most matching words or word combinations;
+6. Pronunciation note: Briefly explain the pronunciation relationship between English words and Chinese Pinyin;
+7. Simple example sentence: Generate 1 basic example sentence containing the Chinese translation (Chinese + English translation).
+
+Example output (must strictly follow this format):
+{
+  "translation": "what is your name",
+  "chinese": "你的名字是什么",
+  "pinyin": "nǐ de míng zì shì shén me",
+  "chineseIpa": "/ni˨˩ dɤ˧˥ miŋ˧˥ tsɨ˥˩ ʂɨ˥˩ ʂən˧˥ mə˧˥/",
+  "englishPhonetic": "/niː də mɪŋ tsi ʃɪ ʃən mə/",
+  "matchedWords": ["knee duck ming tea sheen ma", "need duh mean see shin mo", "neat do meen key shen muh"],
+  "pronunciationNote": "Break down into syllables: ni (knee), de (duh), ming (mean), zi (tea), shi (sheen), shen (shin), me (ma)",
+  "example": {
+    "chinese": "请问，你的名字是什么？",
+    "english": "Excuse me, what is your name?"
+  }
+}
+
+Note: For longer sentences, focus on the core words for pronunciation matching. Keep translations natural and example sentences concise.
+ `;
+      }
 
       const response = await client.chat.completions.create({
         model: "THUDM/GLM-4.1V-9B-Thinking",
@@ -233,20 +270,31 @@ Note: Avoid using rare words, ensure word combinations have no ambiguity, and ma
       >
         <div className="sticky top-6 flex flex-col gap-6">
           <div className="flex flex-col gap-3 rounded-xl bg-background p-4 shadow-sm border border-border">
-            <h2 className="text-2xl font-bold text-foreground">学习中文发音</h2>
+            <h2 className="text-2xl font-bold text-foreground">{isChineseToEnglish ? '学习中文发音' : '英文翻译与发音学习'}</h2>
             <p className="text-muted-foreground text-sm">
-              输入中文词语或短句，找到发音相似的英文单词。
+              {isChineseToEnglish ? '输入中文词语或短句，找到发音相似的英文单词。' : '输入英文词语或句子，获取中文翻译并学习发音。'}
             </p>
+            
+            {/* 模式切换按钮 */}
+            <button
+              className="mt-2 px-4 py-2 bg-secondary text-primary-foreground rounded-full shadow-sm hover:bg-secondary/90 transition-colors flex items-center justify-center gap-2"
+              onClick={() => setIsChineseToEnglish(!isChineseToEnglish)}
+            >
+              <span>{isChineseToEnglish ? '切换到英文→中文' : '切换到中文→英文'}</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
           </div>
 
           <div className="flex flex-col gap-4 rounded-xl bg-background p-4 shadow-sm border border-border">
             <label className="flex flex-col w-full">
               <p className="text-sm font-medium text-foreground pb-2">
-                中文词语或短句
+                {isChineseToEnglish ? '中文词语或短句' : '英文词语或句子'}
               </p>
               <textarea
                 className="form-input min-h-32 resize-none rounded-lg text-foreground border border-input bg-background p-3"
-                placeholder="输入中文词语/短句，如'你好'"
+                placeholder={isChineseToEnglish ? "输入中文词语/短句，如'你好'" : "输入英文词语/句子，如'what is your name'"}
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
                 onKeyPress={handleKeyPress}
@@ -317,6 +365,12 @@ Note: Avoid using rare words, ensure word combinations have no ambiguity, and ma
             <div className="flex flex-col gap-6">
               {/* 标题部分 */}
               <div className="pb-4 border-b border-border">
+                {result.translation && (
+                  <div className="mb-2">
+                    <p className="text-sm text-muted-foreground">原文</p>
+                    <p className="text-xl text-foreground italic">{result.translation}</p>
+                  </div>
+                )}
                 <h1 className="text-4xl font-chinese text-foreground">
                   {result.chinese}
                 </h1>
