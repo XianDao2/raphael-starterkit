@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PronounceIt - Learn Chinese Pronunciation</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;700;900&amp;family=Noto+Sans+SC:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#4285F4",
+                        "secondary": "#34A853",
+                        "background-light": "#F5F5F5",
+                        "background-dark": "#101722",
+                        "text-primary": "#333333",
+                        "text-secondary": "#666666",
+                    },
+                    fontFamily: {
+                        "display": ['Lexend', 'Roboto', '"Noto Sans SC"', 'sans-serif']
+                    },
+                    borderRadius: {
+                        "DEFAULT": "8px",
+                        "lg": "8px",
+                        "xl": "8px",
+                        "full": "9999px"
+                    },
+                    boxShadow: {
+                        'subtle': '0 2px 4px rgba(0,0,0,0.1)',
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark text-text-primary dark:text-gray-200">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<header class="w-full bg-white dark:bg-background-dark dark:border-b dark:border-gray-700 shadow-sm z-10">
+<div class="mx-auto flex max-w-[1280px] items-center justify-between whitespace-nowrap px-6 py-3">
+<div class="flex items-center gap-4 text-text-primary dark:text-white">
+<div class="size-8 text-primary">
+<svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M39.475 21.6262C40.358 21.4363 40.6863 21.5589 40.7581 21.5934C40.7876 21.655 40.8547 21.857 40.8082 22.3336C40.7408 23.0255 40.4502 24.0046 39.8572 25.2301C38.6799 27.6631 36.5085 30.6631 33.5858 33.5858C30.6631 36.5085 27.6632 38.6799 25.2301 39.8572C24.0046 40.4502 23.0255 40.7407 22.3336 40.8082C21.8571 40.8547 21.6551 40.7875 21.5934 40.7581C21.5589 40.6863 21.4363 40.358 21.6262 39.475C21.8562 38.4054 22.4689 36.9657 23.5038 35.2817C24.7575 33.2417 26.5497 30.9744 28.7621 28.762C30.9744 26.5497 33.2417 24.7574 35.2817 23.5037C36.9657 22.4689 38.4054 21.8562 39.475 21.6262ZM4.41189 29.2403L18.7597 43.5881C19.8813 44.7097 21.4027 44.9179 22.7217 44.7893C24.0585 44.659 25.5148 44.1631 26.9723 43.4579C29.9052 42.0387 33.2618 39.5667 36.4142 36.4142C39.5667 33.2618 42.0387 29.9052 43.4579 26.9723C44.1631 25.5148 44.659 24.0585 44.7893 22.7217C44.9179 21.4027 44.7097 19.8813 43.5881 18.7597L29.2403 4.41187C27.8527 3.02428 25.8765 3.02573 24.2861 3.36776C22.6081 3.72863 20.7334 4.58419 18.8396 5.74801C16.4978 7.18716 13.9881 9.18353 11.5858 11.5858C9.18354 13.988 7.18717 16.4978 5.74802 18.8396C4.58421 20.7334 3.72865 22.6081 3.36778 24.2861C3.02574 25.8765 3.02429 27.8527 4.41189 29.2403Z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+<h2 class="text-text-primary dark:text-white text-xl font-bold leading-tight tracking-[-0.015em]">PronounceIt</h2>
+</div>
+<div class="flex items-center gap-2">
+<button class="flex h-10 cursor-pointer items-center justify-center overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-700 px-3 text-text-secondary dark:text-gray-300 gap-2 text-sm font-bold leading-normal tracking-[0.015em] hover:bg-gray-200 dark:hover:bg-gray-600">
+<span class="material-symbols-outlined text-xl">language</span>
+<span>EN/中文</span>
+</button>
+<button class="flex h-10 w-10 cursor-pointer items-center justify-center overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-700 text-text-secondary dark:text-gray-300 gap-2 text-sm font-bold leading-normal tracking-[0.015em] hover:bg-gray-200 dark:hover:bg-gray-600">
+<span class="material-symbols-outlined text-xl">help_outline</span>
+</button>
+</div>
+</div>
+</header>
+<main class="mx-auto flex w-full max-w-[1280px] flex-1 flex-grow p-6">
+<div class="grid grid-cols-12 gap-6 w-full">
+<aside class="col-span-12 md:col-span-4 lg:col-span-3">
+<div class="sticky top-6 flex flex-col gap-6">
+<div class="flex flex-col gap-3 rounded-xl bg-white dark:bg-gray-800 p-4 shadow-subtle">
+<p class="text-text-primary dark:text-gray-100 text-2xl font-bold leading-tight tracking-[-0.033em]">Learn Chinese</p>
+<p class="text-text-secondary dark:text-gray-400 text-sm font-normal leading-normal">Enter a Chinese word or phrase to find similar sounding English words.</p>
+</div>
+<div class="flex flex-col gap-4 rounded-xl bg-white dark:bg-gray-800 p-4 shadow-subtle">
+<label class="flex flex-col w-full">
+<p class="text-text-primary dark:text-gray-100 text-sm font-medium leading-normal pb-2">Chinese Word or Phrase</p>
+<textarea class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-text-primary dark:text-gray-200 focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 min-h-32 placeholder:text-text-secondary dark:placeholder:text-gray-500 p-3 text-base font-normal leading-normal" placeholder="输入中文词语/短句，如“你好”"></textarea>
+</label>
+<button class="flex min-w-[84px] w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-primary text-white text-base font-bold leading-normal tracking-[0.015em] shadow-subtle hover:bg-blue-600 dark:hover:bg-blue-500 transition-colors">
+<span class="truncate">Query</span>
+</button>
+</div>
+<div class="flex flex-col rounded-xl bg-white dark:bg-gray-800 p-4 shadow-subtle">
+<h3 class="text-text-primary dark:text-gray-100 text-lg font-bold leading-tight tracking-[-0.015em] pb-3">Recent Queries</h3>
+<ul class="flex flex-col gap-1">
+<li><a class="block rounded-lg p-2 text-text-secondary dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-200 transition-colors" href="#">你好</a></li>
+<li><a class="block rounded-lg p-2 text-text-secondary dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-200 transition-colors" href="#">谢谢</a></li>
+<li><a class="block rounded-lg p-2 text-text-secondary dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-200 transition-colors" href="#">我爱你</a></li>
+<li><a class="block rounded-lg p-2 text-text-secondary dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-200 transition-colors" href="#">中国</a></li>
+</ul>
+</div>
+</div>
+</aside>
+<section class="col-span-12 md:col-span-8 lg:col-span-9">
+<div class="flex h-full items-center justify-center rounded-xl bg-white/50 dark:bg-gray-800/20 border-2 border-dashed border-gray-300 dark:border-gray-700 p-8">
+<div class="text-center">
+<span class="material-symbols-outlined text-6xl text-gray-400 dark:text-gray-500">search</span>
+<h2 class="mt-4 text-xl font-bold text-text-primary dark:text-gray-200">Results will appear here</h2>
+<p class="mt-2 text-text-secondary dark:text-gray-400">Enter a phrase on the left to get started.</p>
+</div>
+</div>
+</section>
+</div>
+</main>
+</div>
+</body></html>

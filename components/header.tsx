@@ -25,6 +25,7 @@ export default function Header({ user }: HeaderProps) {
   const mainNavItems: NavItem[] = [
     { label: "Home", href: "/" },
     { label: "Popular Names", href: "/product/popular-names" },
+    { label: "Pronunciation", href: "/pronunciation" },
     { label: "Pricing", href: "/pricing" },
     { label: "Avatar", href: "/avatar-generator" },
     { label: "About", href: "/product/about" },

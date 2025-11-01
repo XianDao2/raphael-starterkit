@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PronounceIt - Learn Chinese Pronunciation</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;700;900&amp;family=Roboto:wght@400;700&amp;family=Noto+Sans+SC:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#4285F4",
+                        "secondary": "#34A853",
+                        "background-light": "#F5F5F5",
+                        "background-dark": "#101722",
+                        "text-primary": "#333333",
+                        "text-secondary": "#666666",
+                        "highlight": "#EA4335",
+                    },
+                    fontFamily: {
+                        "display": ["Lexend", "sans-serif"],
+                        "english": ["Roboto", "sans-serif"],
+                        "chinese": ["Noto Sans SC", "sans-serif"],
+                    },
+                    borderRadius: {
+                        "DEFAULT": "8px",
+                        "lg": "8px",
+                        "xl": "8px",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .waveform {
+            display: flex;
+            align-items: center;
+            height: 32px;
+            gap: 2px;
+        }
+        .waveform > div {
+            width: 3px;
+            background-color: #34A853;
+            animation: wave 1.2s linear infinite;
+            border-radius: 9999px;
+        }
+        @keyframes wave {
+            0%, 100% { height: 4px; }
+            50% { height: 24px; }
+        }
+        .waveform > div:nth-child(2) { animation-delay: 0.1s; }
+        .waveform > div:nth-child(3) { animation-delay: 0.2s; }
+        .waveform > div:nth-child(4) { animation-delay: 0.3s; }
+        .waveform > div:nth-child(5) { animation-delay: 0.4s; }
+        .waveform > div:nth-child(6) { animation-delay: 0.5s; }
+        .waveform > div:nth-child(7) { animation-delay: 0.6s; }
+        .waveform > div:nth-child(8) { animation-delay: 0.7s; }
+        .waveform > div:nth-child(9) { animation-delay: 0.8s; }
+        .waveform > div:nth-child(10) { animation-delay: 0.9s; }
+    </style>
+</head>
+<body class="font-english bg-background-light dark:bg-background-dark">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-gray-200 dark:border-b-gray-700 px-10 py-3 bg-white dark:bg-background-dark sticky top-0 z-10 shadow-sm">
+<div class="flex items-center gap-4 text-text-primary dark:text-white">
+<div class="size-6 text-primary">
+<svg fill="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"></path>
+</svg>
+</div>
+<h2 class="font-display text-text-primary dark:text-white text-xl font-bold tracking-[-0.015em]">PronounceIt</h2>
+</div>
+<div class="flex flex-1 justify-center">
+<div class="flex items-center gap-9">
+<a class="text-primary font-bold text-base leading-normal" href="#">Home</a>
+<a class="text-text-secondary dark:text-gray-300 hover:text-primary dark:hover:text-primary text-base font-medium leading-normal" href="#">My Words</a>
+<a class="text-text-secondary dark:text-gray-300 hover:text-primary dark:hover:text-primary text-base font-medium leading-normal" href="#">About</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-blue-600 transition-colors">
+<span class="truncate">Sign Up</span>
+</button>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="User profile picture" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDrO5-Yy_MHsFrjcaU61ZUtCEkx6AcfR0R3zCfZywPmcF42wO_mx1tzsXQ7-V0nBVGI7ZrrAtkjrMq4We69zWWcx956cLfC83Ua4Y9pBuZGnZSH2zY3xCE3_feVZK4UnJauE0vHpkPwpdXxS4Eb_k2-hw8GBBW6QiT5rhaAXsfIJvig-Nqn97-0srQ8OmO5yeTPq3vtkQ4cMws-ty4IeUASKf9DTmkJF1f4kMDYUXJL7-pE553q0gy1f-_WL8xAnPUKUe4LSFz_OUEG");'></div>
+</div>
+</header>
+<main class="flex-1 w-full max-w-7xl mx-auto py-10 px-4">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Left Column: Input Area -->
+<div class="md:col-span-1 flex flex-col gap-6">
+<div class="flex flex-col gap-3">
+<h1 class="font-display text-text-primary dark:text-white text-3xl font-black tracking-[-0.033em]">Learn Chinese Pronunciation</h1>
+<p class="text-text-secondary dark:text-gray-300 text-base font-normal leading-normal">Associate Chinese words with English words to master pronunciation.</p>
+</div>
+<div class="flex flex-col gap-4 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm">
+<label class="flex flex-col w-full">
+<span class="text-sm font-medium text-text-secondary dark:text-gray-300 mb-2">Search Word</span>
+<div class="flex w-full flex-1 items-stretch rounded-lg h-12">
+<div class="text-text-secondary flex border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 items-center justify-center pl-3 rounded-l-lg border-r-0">
+<span class="material-symbols-outlined">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-text-primary dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 h-full placeholder:text-text-secondary px-4 rounded-l-none border-l-0 text-base font-normal leading-normal" placeholder="Enter Chinese or Pinyin..." value="你好"/>
+</div>
+</label>
+<button class="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-primary text-white text-base font-bold leading-normal tracking-[0.015em] hover:bg-blue-600 transition-colors shadow-sm">
+<span class="truncate">Search</span>
+</button>
+</div>
+</div>
+<!-- Right Column: Results Area -->
+<div class="md:col-span-2">
+<div class="bg-white dark:bg-gray-800 rounded-lg shadow-[0_2px_8px_rgba(0,0,0,0.1)] p-6 @container">
+<div class="flex flex-col gap-6">
+<!-- Header Section -->
+<div class="pb-4 border-b border-gray-200 dark:border-gray-700">
+<p class="font-chinese text-4xl text-text-primary dark:text-white">你好 / n<span class="text-highlight">ǐ</span> h<span class="text-highlight">ǎ</span>o</p>
+</div>
+<!-- Phonetic Match Section -->
+<div class="flex flex-col items-center justify-center bg-primary/10 dark:bg-primary/20 p-6 rounded-lg">
+<p class="text-5xl font-bold text-primary dark:text-blue-300">"need how"</p>
+</div>
+<!-- Explanation Text -->
+<div>
+<p class="text-text-secondary dark:text-gray-300 text-base font-normal leading-relaxed">
+                                        A brief explanation of the pronunciation nuances and how the English words create a similar sound. Focus on the falling-rising tone of 'nǐ' and the falling-rising tone of 'hǎo'.
+                                    </p>
+</div>
+<!-- Audio Comparison Section -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-4">
+<div class="flex flex-col items-center gap-3">
+<p class="text-sm font-medium text-text-secondary dark:text-gray-300">Chinese Pronunciation</p>
+<button class="flex items-center justify-center size-16 bg-secondary text-white rounded-full shadow-md hover:bg-green-600 transition-colors">
+<span class="material-symbols-outlined text-4xl">play_arrow</span>
+</button>
+<div class="waveform">
+<div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+</div>
+</div>
+<div class="flex flex-col items-center gap-3">
+<p class="text-sm font-medium text-text-secondary dark:text-gray-300">English Match</p>
+<button class="flex items-center justify-center size-16 bg-secondary text-white rounded-full shadow-md hover:bg-green-600 transition-colors">
+<span class="material-symbols-outlined text-4xl">play_arrow</span>
+</button>
+<div class="h-8"></div> <!-- Spacer for alignment -->
+</div>
+</div>
+<!-- Collapsible Example Sentences -->
+<details class="group">
+<summary class="flex cursor-pointer list-none items-center justify-between rounded-lg p-4 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+<span class="text-base font-medium text-text-primary dark:text-white">Example Sentences</span>
+<span class="transition-transform duration-300 group-open:rotate-180">
+<span class="material-symbols-outlined text-text-secondary dark:text-gray-300">expand_more</span>
+</span>
+</summary>
+<div class="mt-4 space-y-4 px-4">
+<div class="pb-4 border-b border-gray-200 dark:border-gray-700">
+<p class="font-chinese text-lg text-text-primary dark:text-white">你好，很高兴认识你。</p>
+<p class="text-text-secondary dark:text-gray-300">Nǐ hǎo, hěn gāoxìng rènshi nǐ.</p>
+<p class="text-text-secondary dark:text-gray-300 italic">"Hello, very happy to meet you."</p>
+</div>
+<div>
+<p class="font-chinese text-lg text-text-primary dark:text-white">你好吗？</p>
+<p class="text-text-secondary dark:text-gray-300">Nǐ hǎo ma?</p>
+<p class="text-text-secondary dark:text-gray-300 italic">"How are you?"</p>
+</div>
+</div>
+</details>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+</body></html>

@@ -375,6 +375,97 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Pronunciation Feature Section */}
+      <section className="py-20 bg-gradient-to-b from-background to-muted/20">
+        <div className="container px-4 md:px-6">
+          <div className="mx-auto max-w-6xl">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              viewport={{ once: true }}
+              className="bg-primary/10 rounded-3xl p-8 md:p-12 overflow-hidden relative"
+            >
+              <div className="absolute -right-20 -bottom-20 opacity-10">
+                <span className="text-[300px]">🔤</span>
+              </div>
+              
+              <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <div className="space-y-6">
+                  <div className="inline-flex items-center rounded-full px-3 py-1 text-sm bg-primary text-primary-foreground mb-2">
+                    <span className="mr-2">🎯</span>
+                    新功能
+                  </div>
+                  <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl md:text-5xl">
+                    中文发音学习工具
+                  </h2>
+                  <p className="text-lg text-muted-foreground">
+                    用英语单词快速掌握中文发音！输入任何中文词语或短句，获取发音相似的英文单词组合，帮助你轻松记忆。
+                  </p>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2">
+                      <span className="text-primary">✓</span>
+                      <span className="text-muted-foreground">发音联想记忆</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-primary">✓</span>
+                      <span className="text-muted-foreground">音频对比学习</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-primary">✓</span>
+                      <span className="text-muted-foreground">例句练习</span>
+                    </div>
+                  </div>
+                  <motion.button
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.97 }}
+                    onClick={() => router.push('/pronunciation')}
+                    className="inline-flex items-center justify-center h-14 px-8 text-lg font-medium bg-primary text-primary-foreground hover:bg-primary/90 rounded-md transition-colors shadow-lg mt-4"
+                  >
+                    开始学习发音
+                  </motion.button>
+                </div>
+                
+                <div className="bg-background rounded-2xl p-6 shadow-lg border border-border">
+                  <div className="flex flex-col gap-4">
+                    <div className="text-center">
+                      <h3 className="text-xl font-bold text-foreground mb-2">发音示例</h3>
+                    </div>
+                    <div className="bg-muted/30 p-4 rounded-lg">
+                      <div className="flex justify-between items-center">
+                        <div>
+                          <p className="text-xl font-bold text-foreground">你好</p>
+                          <p className="text-muted-foreground">nǐ hǎo</p>
+                        </div>
+                        <div className="text-primary font-bold text-xl">"need how"</div>
+                      </div>
+                    </div>
+                    <div className="bg-muted/30 p-4 rounded-lg">
+                      <div className="flex justify-between items-center">
+                        <div>
+                          <p className="text-xl font-bold text-foreground">谢谢</p>
+                          <p className="text-muted-foreground">xiè xiè</p>
+                        </div>
+                        <div className="text-primary font-bold text-xl">"sheh sheh"</div>
+                      </div>
+                    </div>
+                    <div className="bg-muted/30 p-4 rounded-lg">
+                      <div className="flex justify-between items-center">
+                        <div>
+                          <p className="text-xl font-bold text-foreground">再见</p>
+                          <p className="text-muted-foreground">zài jiàn</p>
+                        </div>
+                        <div className="text-primary font-bold text-xl">"zigh jen"</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
       {/* Pricing Section */}
       <section id="pricing" className="py-20 bg-gradient-to-b from-muted/10 to-background">
         <div className="container px-4 md:px-6">

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Pinyin Pal - Help</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#4387f4",
+                        "background-light": "#f5f7f8",
+                        "background-dark": "#101722",
+                    },
+                    fontFamily: {
+                        "display": ["Lexend", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#111418] dark:text-gray-300">
+<div class="relative flex h-auto min-h-screen w-full flex-col">
+<div class="flex h-full grow flex-col">
+<!-- TopNavBar -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-gray-200/80 dark:border-gray-800 bg-background-light dark:bg-background-dark sticky top-0 z-10 px-4 md:px-10 py-3">
+<div class="flex items-center gap-4">
+<div class="size-6 text-primary">
+<svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M44 4H30.6666V17.3334H17.3334V30.6666H4V44H44V4Z" fill="currentColor"></path>
+</svg>
+</div>
+<h2 class="text-lg font-bold leading-tight tracking-[-0.015em]">Pinyin Pal</h2>
+</div>
+<nav class="flex flex-1 justify-end gap-8">
+<div class="flex items-center gap-9">
+<a class="text-sm font-medium leading-normal hover:text-primary dark:hover:text-primary" href="#">Home</a>
+<a class="text-sm font-medium leading-normal text-primary" href="#">Help</a>
+</div>
+<button class="flex h-10 cursor-pointer items-center justify-center overflow-hidden rounded-lg bg-gray-200/60 dark:bg-gray-800 px-2.5 text-sm font-bold leading-normal tracking-[0.015em] hover:bg-gray-200 dark:hover:bg-gray-700">
+<span class="material-symbols-outlined text-base">dark_mode</span>
+</button>
+</nav>
+</header>
+<main class="flex flex-1 justify-center py-10 sm:py-16 px-4">
+<div class="flex w-full max-w-[960px] flex-col gap-8">
+<!-- PageHeading -->
+<div class="flex flex-wrap justify-between gap-3 p-4">
+<div class="flex min-w-72 flex-col gap-2 text-center w-full">
+<h1 class="text-4xl font-black leading-tight tracking-[-0.033em] text-gray-900 dark:text-white">如何用英语单词快速学中文发音？</h1>
+<p class="text-base font-normal leading-normal text-gray-500 dark:text-gray-400">How to learn Chinese pronunciation with English words?</p>
+</div>
+</div>
+<!-- TextGrid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+<div class="flex flex-1 flex-col gap-3 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 shadow-sm">
+<div class="text-primary">
+<span class="material-symbols-outlined">keyboard</span>
+</div>
+<div class="flex flex-col gap-1">
+<h2 class="text-base font-bold leading-tight text-gray-900 dark:text-white">1. Input: Type a Chinese word</h2>
+<p class="text-sm font-normal leading-normal text-gray-500 dark:text-gray-400">For example: '谢谢'</p>
+</div>
+</div>
+<div class="flex flex-1 flex-col gap-3 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 shadow-sm">
+<div class="text-primary">
+<span class="material-symbols-outlined">search</span>
+</div>
+<div class="flex flex-col gap-1">
+<h2 class="text-base font-bold leading-tight text-gray-900 dark:text-white">2. Search: Click to generate results</h2>
+<p class="text-sm font-normal leading-normal text-gray-500 dark:text-gray-400">Click the blue button to get the result</p>
+</div>
+</div>
+<div class="flex flex-1 flex-col gap-3 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 shadow-sm">
+<div class="text-primary">
+<span class="material-symbols-outlined">volume_up</span>
+</div>
+<div class="flex flex-col gap-1">
+<h2 class="text-base font-bold leading-tight text-gray-900 dark:text-white">3. Learn: Listen and associate</h2>
+<p class="text-sm font-normal leading-normal text-gray-500 dark:text-gray-400">Associate '你好' with 'need how'</p>
+</div>
+</div>
+</div>
+<!-- ListItem -->
+<div class="flex items-center gap-4 rounded-xl bg-primary/10 dark:bg-primary/20 px-6 py-4 mx-4">
+<div class="flex shrink-0 items-center justify-center text-primary dark:text-blue-300">
+<span class="material-symbols-outlined">info</span>
+</div>
+<p class="flex-1 truncate text-base font-normal leading-normal text-gray-700 dark:text-gray-300">Tip: Supports single characters (水), words (谢谢), and short phrases (我饿了).</p>
+</div>
+</div>
+</main>
+</div>
+</div>
+</body></html>

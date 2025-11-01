@@ -41,6 +41,15 @@ export function MobileNav({ items, user, isDashboard }: MobileNavProps) {
               {item.label}
             </Link>
           ))}
+          {/* Ensure Pronunciation link is always available */}
+          {!items.some(item => item.href === '/pronunciation') && (
+            <Link
+              href="/pronunciation"
+              className="text-lg font-semibold text-muted-foreground transition-colors hover:text-primary"
+            >
+              Pronunciation
+            </Link>
+          )}
         </nav>
         <div className="mt-auto pt-4 border-t">
           {user ? (
