@@ -12,7 +12,7 @@ import PronunciationResult from "@/components/product/pronunciation/Pronunciatio
 interface FamousPerson {
   name: string; // 中文名
   nameEn: string; // 英文名
-  pronunciation: string; // 类似英文读音
+  pronunciation: string; // 带声调的拼音
   image: string; // 头像URL
   birthYear: string; // 出生年份
   birthPlace: string; // 出生地
@@ -21,6 +21,13 @@ interface FamousPerson {
   achievements: string[]; // 主要成就
   quotes?: string; // 名言
   chineseIpa?: string; // 中文IPA音标
+  englishPhonetic?: string; // 英语近似音标
+  matchedWords?: string[]; // 匹配的英语单词
+  pronunciationNote?: string; // 发音关系说明
+  example?: {
+    chinese: string;
+    english: string;
+  }; // 例句
 }
 
 export default function FamousPeoplePage() {
@@ -66,12 +73,27 @@ export default function FamousPeoplePage() {
     const prompt = `
 请随机生成一位中国或国际知名的历史人物、科学家、艺术家、政治人物、企业家等领域的名人信息。
 
+对于名人的中文名，请按照以下步骤生成对应的拼音和发音信息，帮助英语母语者（初级中文学习者，只熟悉CEFR A1-B1级别的英语单词）将中文发音与熟悉的英语单词联系起来：
+1. 准确标记中文发音的拼音（带声调）
+2. 转换拼音为国际音标（IPA），包括声调符号
+3. 转换IPA为英语近似音标（DJ音标），消除没有对应英语发音的特殊音，保留核心发音
+4. 按音节拆分拼音，匹配发音相似度≥85%的英语常用词（A1-B1级别），返回恰好三个最匹配的单词组合
+5. 简要解释英语单词与中文拼音之间的发音关系
+6. 生成包含中文单词的简单例句（中文+英文翻译）
+
 请输出以下格式的JSON：
 {
   "name": "中文名",
   "nameEn": "英文名",
-  "pronunciation": "类似英文发音的注音（用简单的英文单词组合表示）",
+  "pronunciation": "带声调的拼音",
   "chineseIpa": "中文IPA音标",
+  "englishPhonetic": "英语近似音标",
+  "matchedWords": ["匹配的英语单词组1", "匹配的英语单词组2", "匹配的英语单词组3"],
+  "pronunciationNote": "发音关系说明",
+  "example": {
+    "chinese": "包含中文名的中文例句",
+    "english": "英文翻译"
+  },
   "birthYear": "出生年份",
   "birthPlace": "出生地",
   "field": "领域（如科学家、艺术家等）",
@@ -82,6 +104,7 @@ export default function FamousPeoplePage() {
 
 请确保信息准确，选择真实存在的历史人物或当代名人。
 请直接返回JSON，不要添加其他说明文字。
+例如{"name": "钱学森","nameEn": "Qian Xuesen","pronunciation": "Qián Xuésēn","chineseIpa": "/tɕʰjɛ̌n ɕɥɛ̌ sən/","englishPhonetic": "/tʃjɛn ʃweɪ sən/","matchedWords": ["Chee yen Shway sen", "Chien Shue sen", "Chyan Xue sen"],"pronunciationNote": "“Qián” 发音近似英语 “Chee”（奶酪 cheese 开头音）+“yen”（日元货币词），声调为第二声；“Xué” 近似 “Shway”（shoe+way 组合音），第二声；“sēn” 近似 “sen”（send 去掉尾音 d），第一声，均为 A1-B1 级别基础词汇组合。","example": {"chinese": "钱学森是中国著名的科学家。","english": "Qian Xuesen is a famous scientist in China."},"birthYear": "1911 年","birthPlace": "中国浙江省杭州市","field": "科学家（航空航天领域）","description": "1911 年生于杭州，曾留学美国获博士学位。1955 年回国，投身中国航天事业，是 “两弹一星” 功勋人物，被誉为 “中国航天之父”，2009 年逝世。","achievements": ["主导中国导弹、原子弹研制，奠定航天基础","创建中国第一个火箭、导弹研究机构","推动 “两弹一星” 工程成功，获国家最高科学技术奖"],"quotes": "外国人能搞的，难道中国人不能搞？"}
 `;
 
     const response = await client.chat.completions.create({
@@ -256,11 +279,11 @@ export default function FamousPeoplePage() {
                         result={{
                           chinese: famousPerson.name,
                           pinyin: famousPerson.pronunciation,
-                          chineseIpa: famousPerson.chineseIpa || `/\${famousPerson.pronunciation}/`,
-                          matchedWords: [famousPerson.nameEn.split(' ')[0] || 'Example'],
-                          englishPhonetic: famousPerson.pronunciation,
-                          pronunciationNote: `这是${famousPerson.name}的标准中文发音。${famousPerson.field}家${famousPerson.name}出生于${famousPerson.birthYear}年。`,
-                          example: {
+                          chineseIpa: famousPerson.chineseIpa || `/${famousPerson.pronunciation}/`,
+                          englishPhonetic: famousPerson.englishPhonetic || famousPerson.pronunciation,
+                          matchedWords: famousPerson.matchedWords || [famousPerson.nameEn.split(' ')[0] || 'Example'],
+                          pronunciationNote: famousPerson.pronunciationNote || `这是${famousPerson.name}的标准中文发音。${famousPerson.field}家${famousPerson.name}出生于${famousPerson.birthYear}年。`,
+                          example: famousPerson.example || {
                             chinese: `${famousPerson.name}是著名的${famousPerson.field}家。`,
                             english: `${famousPerson.nameEn} is a famous ${famousPerson.field}.`
                           }
