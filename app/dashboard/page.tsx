@@ -67,11 +67,11 @@ export default async function DashboardPage() {
       </div>
 
       {/* Main Content Grid */}
-      <div className="grid gap-6 lg:grid-cols-3">
+      {/* <div className="grid gap-6 lg:grid-cols-3">
         <MyNamesCard />
         <GenerationHistoryCard />
         <AvatarHistoryCard />
-      </div>
+      </div> */}
 
       {/* Account Details Section */}
       <div className="rounded-xl border bg-card p-4 sm:p-6 mb-6">
