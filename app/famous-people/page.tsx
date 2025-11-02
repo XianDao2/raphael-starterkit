@@ -156,9 +156,9 @@ export default function FamousPeoplePage() {
   };
 
   // 组件加载时自动生成一位名人
-  useEffect(() => {
-    generateFamousPerson();
-  }, []);
+  // useEffect(() => {
+  //   generateFamousPerson();
+  // }, []);
 
   return (
     <div className="min-h-screen bg-background">
@@ -281,6 +281,21 @@ export default function FamousPeoplePage() {
                           <p className="font-medium">{famousPerson.birthPlace}</p>
                         </div>
                       </div>
+                      
+                      {/* 名人名言 */}
+                      {famousPerson.quotes && (
+                        <motion.div 
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.5, delay: 0.5 }}
+                          className="mt-6 mb-6 bg-primary/5 border border-primary/20 rounded-lg p-4 w-full"
+                        >
+                          <blockquote className="italic text-muted-foreground text-sm">
+                            "{famousPerson.quotes}"
+                          </blockquote>
+                          <p className="text-right font-medium text-sm mt-2">— {famousPerson.name}</p>
+                        </motion.div>
+                      )}
                     </div>
                     
                     {/* 人物简介 */}
@@ -334,7 +349,7 @@ export default function FamousPeoplePage() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.3 }}
-                    className="flex-1 w-full"
+                    className="flex-1 w-full pl-4"
                   >
                     <PronunciationResult 
                       type="cn" 
@@ -356,20 +371,7 @@ export default function FamousPeoplePage() {
                   </motion.div>
                 </div>
                 
-                {/* 名人名言 */}
-                {famousPerson.quotes && (
-                  <motion.div 
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: 0.5 }}
-                    className="bg-primary/5 border border-primary/20 rounded-lg p-6"
-                  >
-                    <blockquote className="italic text-muted-foreground">
-                      "{famousPerson.quotes}"
-                    </blockquote>
-                    <p className="text-right font-medium mt-2">— {famousPerson.name}</p>
-                  </motion.div>
-                )}
+
               </CardContent>
             </Card>
           </motion.div>
