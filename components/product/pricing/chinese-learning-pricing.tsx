@@ -29,12 +29,11 @@ const pricingTiers: PricingTier[] = [
     name: "Free Trial",
     price: "$0",
     credits: 1,
-    description: "Perfect for trying out our service",
+    description: "Perfect for trying out our Chinese learning tools",
     features: [
-      "1 free name generation",
-      "Basic name analysis",
-      "Cultural significance",
-      "Pinyin pronunciation",
+      "1 free pronunciation lookup",
+      "Basic audio samples",
+      "Simple pronunciation guide",
       "No registration required"
     ],
     icon: <Gift className="h-6 w-6" />,
@@ -43,31 +42,30 @@ const pricingTiers: PricingTier[] = [
   },
   {
     id: "credit-pack",
-    name: "Credit Pack",
+    name: "Learning Pack",
     price: "$5",
     credits: 1000,
-    description: "Best value for regular users",
+    description: "Best value for regular learners",
     features: [
-      "1000 credits included",
-      "Standard & Premium generation",
-      "Personality-based matching",
-      "Custom name preferences",
-      "Unlimited name variations",
-      "Save favorite names",
-      "Export to PDF"
+      "1000 pronunciation lookups",
+      "Advanced audio samples",
+      "Detailed pronunciation guides",
+      "Character learning tools",
+      "Save learning progress",
+      "Export pronunciation guides to PDF"
     ],
     icon: <Crown className="h-6 w-6" />,
     popular: true,
-    buttonText: "Purchase Credits",
+    buttonText: "Purchase Learning Pack",
     buttonVariant: "default"
   }
 ];
 
-interface ChineseNamePricingProps {
+interface ChineseLearningPricingProps {
   onScrollToForm?: () => void;
 }
 
-export default function ChineseNamePricing({ onScrollToForm }: ChineseNamePricingProps) {
+export default function ChineseLearningPricing({ onScrollToForm }: ChineseLearningPricingProps) {
   const router = useRouter();
   const { user } = useUser();
   const { toast } = useToast();
@@ -90,7 +88,7 @@ export default function ChineseNamePricing({ onScrollToForm }: ChineseNamePricin
     if (!user) {
       toast({
         title: "Sign In Required",
-        description: "Please sign in to purchase credits.",
+        description: "Please sign in to purchase learning credits.",
         variant: "destructive",
       });
       router.push('/sign-in');

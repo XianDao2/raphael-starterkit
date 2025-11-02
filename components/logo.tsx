@@ -9,15 +9,15 @@ export function Logo() {
     >
       <div className="flex items-center justify-center">
         <Image
-          src="/images/chinesename-logo.png"
-          alt="ChineseName.club Logo"
+          src="/images/quicklearnchinese-logo.png"
+          alt="QuickLearnChinese Logo"
           width={32}
           height={32}
           className="w-8 h-8"
         />
       </div>
       <span className="font-bold text-lg bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
-        ChineseName.club
+        QuickLearnChinese
       </span>
     </Link>
   );

@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
 
     console.log('PDF generation request:', {
       user: user.id,
-      chineseName: nameData.chinese,
+      chineseText: nameData.chinese,
       englishName: userData.englishName
     });
 

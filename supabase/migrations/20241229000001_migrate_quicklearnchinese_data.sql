@@ -1,4 +1,4 @@
--- Migration script to merge ChineseName.club data structure with Starter Kit
+-- Migration script to merge QuickLearnChinese data structure with Starter Kit
 -- This script handles the transition from user_credits/credit_transactions to customers/credits_history
 
 -- Step 1: Create temporary tables if they exist in the old ChineseName database
@@ -168,7 +168,7 @@ USING (auth.role() = 'service_role');
 -- Success message
 DO $$
 BEGIN
-    RAISE NOTICE 'ChineseName.club data migration completed successfully!';
+    RAISE NOTICE 'QuickLearnChinese data migration completed successfully!';
     RAISE NOTICE 'Old tables (user_credits, credit_transactions) are preserved for backup.';
     RAISE NOTICE 'New unified system uses customers and credits_history tables.';
 END $$;

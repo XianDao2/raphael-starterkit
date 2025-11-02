@@ -45,6 +45,6 @@ yarn-error.log*
 next-env.d.ts
 
 # External reference folder
-Chinesename.club/
+QuickLearnChinese/
 package-lock.json
 pnpm-lock.yaml

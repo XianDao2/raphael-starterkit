@@ -12,19 +12,19 @@ const baseUrl = process.env.BASE_URL
 
 export const metadata = {
   metadataBase: new URL(baseUrl),
-  title: "ChineseName.club - AI Chinese Name Generator",
-  description: "Discover your perfect Chinese name with our AI-powered generator. Get personalized names based on your personality, with cultural significance and detailed meanings.",
-  keywords: "Chinese name generator, AI name generator, Chinese names, cultural names, personalized names, Chinese identity",
+  title: "QuickLearnChinese - Learn Chinese Quickly and Easily",
+  description: "QuickLearnChinese helps you learn Chinese efficiently with AI-powered tools, personalized lessons, and interactive exercises.",
+  keywords: "learn Chinese, Chinese learning, AI Chinese learning, Chinese lessons, study Chinese, Chinese language",
   openGraph: {
-    title: "ChineseName.club - AI Chinese Name Generator",
-    description: "Discover your perfect Chinese name with our AI-powered generator. Get personalized names based on your personality, with cultural significance and detailed meanings.",
+    title: "QuickLearnChinese - Learn Chinese Quickly and Easily",
+    description: "QuickLearnChinese helps you learn Chinese efficiently with AI-powered tools, personalized lessons, and interactive exercises.",
     type: "website",
     url: baseUrl,
   },
   twitter: {
     card: "summary_large_image",
-    title: "ChineseName.club - AI Chinese Name Generator",
-    description: "Discover your perfect Chinese name with our AI-powered generator.",
+    title: "QuickLearnChinese - Learn Chinese Quickly and Easily",
+    description: "QuickLearnChinese helps you learn Chinese efficiently with AI-powered tools.",
   },
 };
 
