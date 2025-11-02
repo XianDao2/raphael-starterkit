@@ -248,52 +248,26 @@ export default function FamousPeoplePage() {
               </CardHeader>
               
               <CardContent className="pt-4">
-                {/* 头像和基本信息 */}
-                  <div className="flex flex-col gap-8">
-                    {/* 头像 */}
+                {/* 头像和发音信息并排布局 */}
+                  <div className="flex flex-col md:flex-row  items-start">
+                    {/* 左侧：头像和基本信息 */}
                     <motion.div 
                       initial={{ scale: 0.9, opacity: 0 }}
                       animate={{ scale: 1, opacity: 1 }}
                       transition={{ duration: 0.5, delay: 0.2 }}
-                      className="flex justify-center"
+                      className="flex flex-col items-center shrink-0 w-full md:w-auto"
                     >
-                      <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-primary/20">
+                      <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-primary/20 mb-4">
                         <img 
                           src={famousPerson.image} 
                           alt={famousPerson.name} 
                           className="w-full h-full object-cover"
                         />
                       </div>
-                    </motion.div>
-                    
-                    {/* 中文发音组件 */}
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.5, delay: 0.3 }}
-                    >
-                      <PronunciationResult 
-                        type="cn" 
-                        value={famousPerson.name} 
-                        isLoading={false} 
-                        result={{
-                          chinese: famousPerson.name,
-                          pinyin: famousPerson.pronunciation,
-                          chineseIpa: famousPerson.chineseIpa || `/${famousPerson.pronunciation}/`,
-                          englishPhonetic: famousPerson.englishPhonetic || famousPerson.pronunciation,
-                          matchedWords: famousPerson.matchedWords || [famousPerson.nameEn.split(' ')[0] || 'Example'],
-                          pronunciationNote: famousPerson.pronunciationNote || `这是${famousPerson.name}的标准中文发音。${famousPerson.field}家${famousPerson.name}出生于${famousPerson.birthYear}年。`,
-                          example: famousPerson.example || {
-                            chinese: `${famousPerson.name}是著名的${famousPerson.field}家。`,
-                            english: `${famousPerson.nameEn} is a famous ${famousPerson.field}.`
-                          }
-                        }}
-                      />
-                    </motion.div>
-                    
-                    {/* 基本信息 */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                      <div className="flex items-center gap-3">
+                        
+                      {/* 基本信息 */}
+                      <div className="grid grid-cols-1 gap-4 w-full max-w-xs">
+                        <div className="flex items-center gap-3">
                         <Calendar className="h-5 w-5 text-primary flex-shrink-0" />
                         <div>
                           <p className="text-sm text-muted-foreground">出生年份</p>
@@ -308,52 +282,79 @@ export default function FamousPeoplePage() {
                         </div>
                       </div>
                     </div>
-                  </div>
-                
-                {/* 人物简介 */}
-                <motion.div 
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.5, delay: 0.3 }}
-                  className="mb-8"
-                >
-                  <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
-                    <BookOpen className="h-5 w-5 text-primary" />
-                    人物简介
-                  </h3>
-                  <p className="text-muted-foreground leading-relaxed">
-                    {famousPerson.description}
-                  </p>
-                </motion.div>
-                
-                {/* 主要成就 */}
-                <motion.div 
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.5, delay: 0.4 }}
-                  className="mb-8"
-                >
-                  <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
-                    <Users className="h-5 w-5 text-primary" />
-                    主要成就
-                  </h3>
-                  <ul className="space-y-2">
-                    {famousPerson.achievements.map((achievement, index) => (
-                      <motion.li 
-                        key={index}
-                        initial={{ x: -10, opacity: 0 }}
-                        animate={{ x: 0, opacity: 1 }}
-                        transition={{ duration: 0.3, delay: 0.4 + index * 0.1 }}
-                        className="flex items-start gap-3"
-                      >
-                        <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary text-sm font-medium mt-0.5 flex-shrink-0">
-                          {index + 1}
-                        </span>
-                        <span className="text-muted-foreground">{achievement}</span>
-                      </motion.li>
-                    ))}
-                  </ul>
-                </motion.div>
+                    
+                    {/* 人物简介 */}
+                    <motion.div 
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.5, delay: 0.3 }}
+                      className="mb-8 w-full max-w-xs"
+                    >
+                      <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                        <BookOpen className="h-5 w-5 text-primary" />
+                        人物简介
+                      </h3>
+                      <p className="text-muted-foreground leading-relaxed">
+                        {famousPerson.description}
+                      </p>
+                    </motion.div>
+                    
+                    {/* 主要成就 */}
+                    <motion.div 
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.5, delay: 0.4 }}
+                      className="mb-8 w-full max-w-xs"
+                    >
+                      <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                        <Users className="h-5 w-5 text-primary" />
+                        主要成就
+                      </h3>
+                      <ul className="space-y-2">
+                        {famousPerson.achievements.map((achievement, index) => (
+                          <motion.li 
+                            key={index}
+                            initial={{ x: -10, opacity: 0 }}
+                            animate={{ x: 0, opacity: 1 }}
+                            transition={{ duration: 0.3, delay: 0.4 + index * 0.1 }}
+                            className="flex items-start gap-3"
+                          >
+                            <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary text-sm font-medium mt-0.5 flex-shrink-0">
+                              {index + 1}
+                            </span>
+                            <span className="text-muted-foreground">{achievement}</span>
+                          </motion.li>
+                        ))}
+                      </ul>
+                    </motion.div>
+                  </motion.div>
+                  
+                  {/* 右侧：中文发音组件 */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.3 }}
+                    className="flex-1 w-full"
+                  >
+                    <PronunciationResult 
+                      type="cn" 
+                      value={famousPerson.name} 
+                      isLoading={false} 
+                      result={{
+                        chinese: famousPerson.name,
+                        pinyin: famousPerson.pronunciation,
+                        chineseIpa: famousPerson.chineseIpa || `/${famousPerson.pronunciation}/`,
+                        englishPhonetic: famousPerson.englishPhonetic || famousPerson.pronunciation,
+                        matchedWords: famousPerson.matchedWords || [famousPerson.nameEn.split(' ')[0] || 'Example'],
+                        pronunciationNote: famousPerson.pronunciationNote || `这是${famousPerson.name}的标准中文发音。${famousPerson.field}家${famousPerson.name}出生于${famousPerson.birthYear}年。`,
+                        example: famousPerson.example || {
+                          chinese: `${famousPerson.name}是著名的${famousPerson.field}家。`,
+                          english: `${famousPerson.nameEn} is a famous ${famousPerson.field}.`
+                        }
+                      }}
+                    />
+                  </motion.div>
+                </div>
                 
                 {/* 名人名言 */}
                 {famousPerson.quotes && (
