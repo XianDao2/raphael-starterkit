@@ -6,6 +6,7 @@ export const SUBSCRIPTION_TIERS: ProductTier[] = [
     id: "tier-premium",
     productId: "prod_6gRB7gyIkL0pvN7wG6iAjp", // $10 monthly subscription// $10 monthly subscription
     priceMonthly: "$10",
+    creditAmount: 2000,
     description: "2,000 credits / mo · No ads · No watermark · Fast generation (5x).",
     features: [
       "Pro",
@@ -22,6 +23,7 @@ export const SUBSCRIPTION_TIERS: ProductTier[] = [
     id: "tier-ultimate",
     productId: "prod_5Kqq7BxbLyxmO1sM0Pc5LY", // $20 monthly subscription
     priceMonthly: "$100",
+    creditAmount: 5000,
     description: "5,000 credits / mo · Fastest generation · HD images · Private generation.",
     features: [
       "ProMax",
