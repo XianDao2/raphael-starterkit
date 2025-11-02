@@ -67,10 +67,12 @@ export default function PricingPage() {
         }
         setLoadingTier(tierId);
         try {
+            // 获取对应的订阅层级及其积分数量
+            const tier = SUBSCRIPTION_TIERS.find(t => t.id === tierId);
             const res = await fetch("/api/creem/create-checkout", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ productId, productType: "subscription", creditsAmount: tierId === "tier-premium" ? 1000 : 2000 }),
+                body: JSON.stringify({ productId, productType: "subscription", creditsAmount: tier?.creditAmount || 0 }),
             });
             if (!res.ok) throw new Error("Failed to create checkout session");
             const { checkoutUrl } = await res.json();
