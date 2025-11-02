@@ -25,6 +25,16 @@ CREATE POLICY "Users can view their own search history"
   FOR SELECT 
   USING (user_id = auth.uid());
 
+CREATE POLICY "Users can insert their own search history" 
+  ON public.search_history 
+  FOR INSERT 
+  WITH CHECK (user_id = auth.uid());
+
+CREATE POLICY "Users can delete their own search history" 
+  ON public.search_history 
+  FOR DELETE 
+  USING (user_id = auth.uid());
+
 CREATE POLICY "Service role can manage search history" 
   ON public.search_history 
   FOR ALL 

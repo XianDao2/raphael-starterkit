@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import PronunciationResult from './PronunciationResult';
 import OpenAI from "openai";
 import { consumeCredits } from "@/utils/credits-utils";
+import { recordSearchHistory } from "@/utils/search-history-utils";
 
 interface PronunciationResult {
   chinese: string;
@@ -190,6 +191,17 @@ Note: For longer sentences, focus on the core words for pronunciation matching. 
         const parsedResult: PronunciationResult = JSON.parse(apiResponse);
         setResult(parsedResult);
         saveRecentQuery(inputText);
+
+        // 记录搜索历史
+        await recordSearchHistory({
+          search_type: 'pronunciation_search',
+          search_query: inputText,
+          search_results: parsedResult,
+          metadata: {
+            mode: isChineseToEnglish ? 'chinese_to_english' : 'english_to_chinese',
+            generationTime: new Date().toISOString()
+          }
+        });
 
         toast({
           title: "发音匹配成功",

@@ -17,6 +17,7 @@ import { Search,
 } from "lucide-react";
 import PronunciationResult from "@/components/product/pronunciation/PronunciationResult";
 import { consumeCredits } from "@/utils/credits-utils";
+import { recordSearchHistory } from "@/utils/search-history-utils";
 
 interface FamousPerson {
   name: string; // 中文名
@@ -66,9 +67,22 @@ export default function FamousPeoplePage() {
       const imageUrl = await generateAvatar(imagePrompt);
 
       // 4. 组合完整的名人信息
-      setFamousPerson({
+      const fullPersonInfo = {
         ...personInfo,
         image: imageUrl,
+      };
+      setFamousPerson(fullPersonInfo);
+
+      // 5. 记录搜索历史
+      await recordSearchHistory({
+        search_type: 'famous_person_search',
+        search_query: `随机生成名人 - ${personInfo.name}`,
+        search_results: fullPersonInfo,
+        metadata: {
+          field: personInfo.field,
+          birthYear: personInfo.birthYear,
+          generationTime: new Date().toISOString()
+        }
       });
 
       toast({
