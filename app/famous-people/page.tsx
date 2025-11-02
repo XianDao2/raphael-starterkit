@@ -6,17 +6,17 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import OpenAI from "openai";
-import {
-  Search,
+import { Search,
   RefreshCw,
   Info,
   User,
   Users,
   Calendar,
   Globe,
-  BookOpen,
+  BookOpen
 } from "lucide-react";
 import PronunciationResult from "@/components/product/pronunciation/PronunciationResult";
+import { consumeCredits } from "@/utils/credits-utils";
 
 interface FamousPerson {
   name: string; // 中文名
@@ -47,14 +47,25 @@ export default function FamousPeoplePage() {
   const generateFamousPerson = async () => {
     setIsGenerating(true);
     try {
-      // 1. 首先生成名人信息
+      // 1. 首先尝试扣除积分
+      const creditsDeducted = await consumeCredits(5, 'famous_person_search');
+      if (!creditsDeducted) {
+        toast({
+          title: "积分不足",
+          description: "您的积分不足，无法继续搜索名人信息",
+          variant: "destructive"
+        });
+        return;
+      }
+      
+      // 2. 积分扣除成功后，生成名人信息
       const personInfo = await generatePersonInfo();
 
-      // 2. 然后根据生成的信息创建头像提示词并生成头像
+      // 3. 然后根据生成的信息创建头像提示词并生成头像
       const imagePrompt = `简笔画风格的${personInfo.field}家${personInfo.name}，线条简单清晰，黑白风格，适合识别，不要文字，人物形象突出，背景简洁`;
       const imageUrl = await generateAvatar(imagePrompt);
 
-      // 3. 组合完整的名人信息
+      // 4. 组合完整的名人信息
       setFamousPerson({
         ...personInfo,
         image: imageUrl,
@@ -62,7 +73,7 @@ export default function FamousPeoplePage() {
 
       toast({
         title: "生成成功",
-        description: `已生成${personInfo.name}的信息`,
+        description: `已扣除1积分，生成${personInfo.name}的信息`,
       });
     } catch (error) {
       console.error("生成名人信息失败:", error);

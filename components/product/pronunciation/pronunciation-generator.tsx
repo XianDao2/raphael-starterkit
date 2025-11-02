@@ -5,6 +5,7 @@ import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
 import PronunciationResult from './PronunciationResult';
 import OpenAI from "openai";
+import { consumeCredits } from "@/utils/credits-utils";
 
 interface PronunciationResult {
   chinese: string;
@@ -81,6 +82,17 @@ export default function PronunciationGenerator() {
     setIsLoading(true);
 
     try {
+      // 首先尝试扣除积分
+      const creditsDeducted = await consumeCredits(5, 'pronunciation_search');
+      if (!creditsDeducted) {
+        toast({
+          title: "积分不足",
+          description: "您的积分不足，无法继续搜索发音匹配",
+          variant: "destructive"
+        });
+        setIsLoading(false);
+        return;
+      }
       // 使用OpenAI库调用大模型
       const client = new OpenAI({
         baseURL: process.env.OPENAI_BASE_URL || "https://api.siliconflow.cn/v1",
@@ -181,7 +193,7 @@ Note: For longer sentences, focus on the core words for pronunciation matching. 
 
         toast({
           title: "发音匹配成功",
-          description: `已找到"${inputText}"的英文发音匹配`,
+          description: `已扣除1积分，找到"${inputText}"的发音匹配`,
         });
       } else {
         throw new Error("无效的API响应");
