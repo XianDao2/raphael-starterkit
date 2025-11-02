@@ -5,7 +5,7 @@ import Link from "next/link";
 export default function AboutPage() {
   return (
     <div className="flex flex-col items-center min-h-screen bg-white">
-      <div className="w-full max-w-4xl px-4 py-16 md:px-6">
+      <div className="w-full max-w-6xl px-4 py-16 md:px-6">
         <div className="space-y-12">
           <div className="text-center space-y-4">
         <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">

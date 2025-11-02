@@ -157,7 +157,7 @@ export default function ChineseLearningPricing({ onScrollToForm }: ChineseLearni
           </motion.div>
 
           {/* Pricing Cards */}
-          <div className="grid gap-8 lg:grid-cols-2 max-w-4xl mx-auto">
+          <div className="grid gap-8 lg:grid-cols-2 max-w-6xl mx-auto">
             {pricingTiers.map((tier, index) => (
               <motion.div
                 key={tier.id}

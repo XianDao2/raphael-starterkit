@@ -291,7 +291,7 @@ export default function NameDetailPage() {
 
       {/* Main Content */}
       <div className="container px-4 md:px-6 py-8">
-        <div className="max-w-4xl mx-auto space-y-8">
+        <div className="max-w-6xl mx-auto space-y-8">
           {/* Hero Section */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
