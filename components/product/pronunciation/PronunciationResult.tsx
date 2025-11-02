@@ -28,11 +28,47 @@ interface ResultData {
 const PronunciationResult: React.FC<PronunciationResultProps> = ({ type, value, isLoading, result }) => {
   const { toast } = useToast();
   const [showExamples, setShowExamples] = useState<boolean>(false);
+  const [englishVoice, setEnglishVoice] = useState<SpeechSynthesisVoice | null>(null);
+  const [chineseVoice, setChineseVoice] = useState<SpeechSynthesisVoice | null>(null);
 
   // 重置示例展开状态当输入值改变时
   useEffect(() => {
     setShowExamples(false);
   }, [value]);
+
+  // 预加载语音合成器
+  useEffect(() => {
+    if ('speechSynthesis' in window) {
+      // 等待语音合成器加载完成
+      const loadVoices = () => {
+        const voices = window.speechSynthesis.getVoices();
+        
+        // 查找英文语音
+        const enVoice = voices.find(voice => 
+          voice.lang === 'en-US' && voice.localService
+        ) || voices.find(voice => voice.lang === 'en-US');
+        
+        // 查找中文语音
+        const zhVoice = voices.find(voice => 
+          voice.lang === 'zh-CN' && voice.localService
+        ) || voices.find(voice => voice.lang === 'zh-CN');
+        
+        setEnglishVoice(enVoice || null);
+        setChineseVoice(zhVoice || null);
+      };
+
+      // 初始加载
+      loadVoices();
+      
+      // 监听语音列表变化事件
+      window.speechSynthesis.onvoiceschanged = loadVoices;
+
+      // 清理函数
+      return () => {
+        window.speechSynthesis.onvoiceschanged = null;
+      };
+    }
+  }, []);
 
   const playChineseAudio = () => {
     // 使用浏览器的Web Speech API实现TTS功能
@@ -40,6 +76,11 @@ const PronunciationResult: React.FC<PronunciationResultProps> = ({ type, value, 
       const utterance = new SpeechSynthesisUtterance(result.chinese);
       utterance.lang = "zh-CN"; // 设置为中文
       utterance.rate = 0.9; // 稍微放慢速度以便学习者听清楚
+      
+      // 如果有预加载的中文语音，使用它
+      if (chineseVoice) {
+        utterance.voice = chineseVoice;
+      }
 
       // 播放前停止可能正在播放的语音
       window.speechSynthesis.cancel();
@@ -64,6 +105,11 @@ const PronunciationResult: React.FC<PronunciationResultProps> = ({ type, value, 
       const utterance = new SpeechSynthesisUtterance(result.matchedWords[index]);
       utterance.lang = "en-US"; // 设置为英语
       utterance.rate = 0.9; // 稍微放慢速度以便学习者听清楚
+      
+      // 如果有预加载的英文语音，使用它
+      if (englishVoice) {
+        utterance.voice = englishVoice;
+      }
 
       // 播放前停止可能正在播放的语音
       window.speechSynthesis.cancel();
