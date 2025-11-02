@@ -9,7 +9,7 @@ export function Logo() {
     >
       <div className="flex items-center justify-center">
         <Image
-          src="/images/quicklearnchinese-logo.png"
+          src="/images/lgo.png"
           alt="QuickLearnChinese Logo"
           width={32}
           height={32}

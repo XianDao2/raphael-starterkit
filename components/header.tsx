@@ -21,9 +21,10 @@ export default function Header({ user }: HeaderProps) {
   const pathname = usePathname();
   const isDashboard = pathname?.startsWith("/dashboard");
 
-  // Main navigation items for Chinese Name Generator
+  // Main navigation items for QuickLearnChinese
   const mainNavItems: NavItem[] = [
     { label: "Home", href: "/" },
+    { label: "名人", href: "/famous-people" },
     { label: "Pricing", href: "/pricing" },
     { label: "Avatar", href: "/avatar-generator" },
     { label: "About", href: "/product/about" },

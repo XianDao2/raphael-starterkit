@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
+import PronunciationResult from './PronunciationResult';
 import OpenAI from "openai";
 
 interface PronunciationResult {
@@ -211,53 +212,7 @@ Note: For longer sentences, focus on the core words for pronunciation matching. 
     }
   };
 
-  const playChineseAudio = () => {
-    // 使用浏览器的Web Speech API实现TTS功能
-    if (result?.chinese && "speechSynthesis" in window) {
-      const utterance = new SpeechSynthesisUtterance(result.chinese);
-      utterance.lang = "zh-CN"; // 设置为中文
-      utterance.rate = 0.9; // 稍微放慢速度以便学习者听清楚
 
-      // 播放前停止可能正在播放的语音
-      window.speechSynthesis.cancel();
-      window.speechSynthesis.speak(utterance);
-
-      toast({
-        title: "播放中文发音",
-        description: `正在播放"${result.chinese}"的标准发音`,
-      });
-    } else {
-      toast({
-        title: "浏览器不支持",
-        description: "您的浏览器不支持语音合成功能",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const playEnglishAudio = (index = 0) => {
-    // 使用浏览器的Web Speech API实现TTS功能
-    if (result?.matchedWords && result.matchedWords[index] && "speechSynthesis" in window) {
-      const utterance = new SpeechSynthesisUtterance(result.matchedWords[index]);
-      utterance.lang = "en-US"; // 设置为英语
-      utterance.rate = 0.9; // 稍微放慢速度以便学习者听清楚
-
-      // 播放前停止可能正在播放的语音
-      window.speechSynthesis.cancel();
-      window.speechSynthesis.speak(utterance);
-
-      toast({
-        title: "播放英文匹配",
-        description: `正在播放\"${result.matchedWords[index]}\"的发音`,
-      });
-    } else {
-      toast({
-        title: "浏览器不支持",
-        description: "您的浏览器不支持语音合成功能",
-        variant: "destructive",
-      });
-    }
-  };
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-12 gap-6 w-full">
@@ -332,185 +287,13 @@ Note: For longer sentences, focus on the core words for pronunciation matching. 
         </div>
       </motion.aside>
 
-      {/* 右侧结果区域 */}
-      <motion.section
-        className="col-span-12 md:col-span-8 lg:col-span-9"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
-      >
-        {!result && !isLoading ? (
-          <div className="flex h-full items-center justify-center rounded-xl bg-muted/20 border-2 border-dashed border-border p-8">
-            <div className="text-center">
-              <span className="text-6xl text-muted-foreground">🔍</span>
-              <h2 className="mt-4 text-xl font-bold text-foreground">
-                结果将显示在这里
-              </h2>
-              <p className="mt-2 text-muted-foreground">
-                在左侧输入短语开始查询。
-              </p>
-            </div>
-          </div>
-        ) : isLoading ? (
-          <div className="flex h-full items-center justify-center rounded-xl bg-background p-8 shadow-sm border border-border">
-            <div className="text-center">
-              <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-              <h2 className="mt-4 text-xl font-bold text-foreground">
-                正在分析发音...
-              </h2>
-            </div>
-          </div>
-        ) : (
-          <div className="rounded-xl bg-background p-6 shadow-sm border border-border">
-            <div className="flex flex-col gap-6">
-              {/* 标题部分 */}
-              <div className="pb-4 border-b border-border">
-                {result.translation && (
-                  <div className="mb-2">
-                    <p className="text-sm text-muted-foreground">原文</p>
-                    <p className="text-xl text-foreground italic">{result.translation}</p>
-                  </div>
-                )}
-                <h1 className="text-4xl font-chinese text-foreground">
-                  {result.chinese}
-                </h1>
-                <p className="text-lg text-muted-foreground">{result.pinyin}</p>
-              </div>
-
-              {/* 发音匹配部分 */}
-              <motion.div
-                className="space-y-4"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5, delay: 0.3 }}
-              >
-                <h3 className="text-xl font-semibold text-foreground">相似发音 (Similar Pronunciations)</h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  {result.matchedWords.map((words, index) => (
-                    <motion.div
-                      key={index}
-                      className="flex flex-col items-center justify-center bg-primary/10 p-4 rounded-lg"
-                      initial={{ scale: 0.95, opacity: 0 }}
-                      animate={{ scale: 1, opacity: 1 }}
-                      transition={{ duration: 0.3, delay: 0.1 * index }}
-                    >
-                      <p className="text-2xl md:text-3xl font-bold text-primary mb-2">
-                        "{words}"
-                      </p>
-                      <button
-                        className="mt-2 px-4 py-1 bg-secondary text-primary-foreground rounded-full shadow-sm hover:bg-secondary/90 transition-colors"
-                        onClick={() => playEnglishAudio(index)}
-                      >
-                        播放发音
-                      </button>
-                    </motion.div>
-                  ))}
-                </div>
-                <p className="text-sm text-muted-foreground mt-2">
-                  中文发音: {result.chineseIpa} | 英语近似音: {result.englishPhonetic}
-                </p>
-              </motion.div>
-
-              {/* 解释文本 */}
-              <div>
-                <p className="text-muted-foreground text-base leading-relaxed">
-                  {result.pronunciationNote}
-                </p>
-              </div>
-
-              {/* 音频比较部分 */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-4">
-                <div className="flex flex-col items-center gap-3">
-                  <p className="text-sm font-medium text-muted-foreground">
-                    中文发音
-                  </p>
-                  <button
-                    className="flex items-center justify-center size-16 bg-secondary text-primary-foreground rounded-full shadow-md hover:bg-secondary/90 transition-colors"
-                    onClick={playChineseAudio}
-                  >
-                    <span className="text-4xl">▶️</span>
-                  </button>
-                  <div className="waveform flex items-center h-8 gap-1">
-                    {[...Array(10)].map((_, i) => (
-                      <div
-                        key={i}
-                        className="w-1 bg-secondary rounded-full animate-wave"
-                        style={{ animationDelay: `${i * 0.1}s` }}
-                      ></div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="flex flex-col items-center gap-3">
-                  <p className="text-sm font-medium text-muted-foreground">
-                    英文匹配 (首选)
-                  </p>
-                  <button
-                    className="flex items-center justify-center size-16 bg-secondary text-primary-foreground rounded-full shadow-md hover:bg-secondary/90 transition-colors"
-                    onClick={() => playEnglishAudio(0)}
-                  >
-                    <span className="text-4xl">▶️</span>
-                  </button>
-                  <div className="h-8"></div>
-                </div>
-              </div>
-
-              {/* 例句部分 */}
-              <details className="group">
-                <summary
-                  className="flex cursor-pointer list-none items-center justify-between rounded-lg p-4 bg-muted hover:bg-muted/80 transition-colors"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setShowExamples(!showExamples);
-                  }}
-                >
-                  <span className="text-base font-medium text-foreground">
-                    例句
-                  </span>
-                  <span
-                    className={`transition-transform duration-300 ${showExamples ? "rotate-180" : ""}`}
-                  >
-                    <svg
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M6 9L12 15L18 9"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </span>
-                </summary>
-
-                {showExamples && (
-                  <motion.div
-                    className="mt-4 space-y-4 px-4"
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <div className="pb-4">
-                      <p className="font-chinese text-lg text-foreground">
-                        {result.example.chinese}
-                      </p>
-                      <p className="text-muted-foreground">{result.pinyin}</p>
-                      <p className="text-muted-foreground italic">
-                        "{result.example.english}"
-                      </p>
-                    </div>
-                  </motion.div>
-                )}
-              </details>
-            </div>
-          </div>
-        )}
-      </motion.section>
+      {/* 右侧结果区域 - 使用新封装的组件 */}
+      <PronunciationResult 
+        type={isChineseToEnglish ? 'cn' : 'en'} 
+        value={inputText} 
+        isLoading={isLoading} 
+        result={result} 
+      />
     </div>
   );
 }
