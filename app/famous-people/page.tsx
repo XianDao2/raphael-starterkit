@@ -6,7 +6,16 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import OpenAI from "openai";
-import { Search, RefreshCw, Info, User, Users, Calendar, Globe, BookOpen } from "lucide-react";
+import {
+  Search,
+  RefreshCw,
+  Info,
+  User,
+  Users,
+  Calendar,
+  Globe,
+  BookOpen,
+} from "lucide-react";
 import PronunciationResult from "@/components/product/pronunciation/PronunciationResult";
 
 interface FamousPerson {
@@ -40,18 +49,21 @@ export default function FamousPeoplePage() {
     try {
       // 1. 首先生成名人信息
       const personInfo = await generatePersonInfo();
-      
+
       // 2. 然后根据生成的信息创建头像提示词并生成头像
       const imagePrompt = `简笔画风格的${personInfo.field}家${personInfo.name}，线条简单清晰，黑白风格，适合识别，不要文字，人物形象突出，背景简洁`;
       const imageUrl = await generateAvatar(imagePrompt);
-      
+
       // 3. 组合完整的名人信息
       setFamousPerson({
         ...personInfo,
-        image: imageUrl
+        image: imageUrl,
       });
-      
-      toast({ title: "生成成功", description: `已生成${personInfo.name}的信息` });
+
+      toast({
+        title: "生成成功",
+        description: `已生成${personInfo.name}的信息`,
+      });
     } catch (error) {
       console.error("生成名人信息失败:", error);
       toast({ title: "生成失败", description: "无法生成名人信息，请稍后再试" });
@@ -63,11 +75,11 @@ export default function FamousPeoplePage() {
   const generatePersonInfo = async (): Promise<Omit<FamousPerson, "image">> => {
     const client = new OpenAI({
       baseURL: process.env.OPENAI_BASE_URL || "https://api.siliconflow.cn/v1",
-      apiKey: 
-        process.env.OPENROUTER_API_KEY || 
-        process.env.OPENAI_API_KEY || 
+      apiKey:
+        process.env.OPENROUTER_API_KEY ||
+        process.env.OPENAI_API_KEY ||
         "sk-tvcwevarnuxopipulvzsqilteuwbrivzihandabyzprbijhl",
-      dangerouslyAllowBrowser: true
+      dangerouslyAllowBrowser: true,
     });
 
     const prompt = `
@@ -112,7 +124,7 @@ export default function FamousPeoplePage() {
       messages: [{ role: "user", content: prompt }],
       stream: false,
       max_tokens: 1000,
-      temperature: 0.8
+      temperature: 0.8,
     });
 
     if (!response.choices[0]?.message?.content) {
@@ -125,18 +137,18 @@ export default function FamousPeoplePage() {
     if (!jsonMatch) {
       throw new Error("响应格式错误");
     }
-    
+
     return JSON.parse(jsonMatch[0]);
   };
 
   const generateAvatar = async (prompt: string): Promise<string> => {
     const client = new OpenAI({
       baseURL: process.env.OPENAI_BASE_URL || "https://api.siliconflow.cn/v1",
-      apiKey: 
-        process.env.OPENROUTER_API_KEY || 
-        process.env.OPENAI_API_KEY || 
+      apiKey:
+        process.env.OPENROUTER_API_KEY ||
+        process.env.OPENAI_API_KEY ||
         "sk-tvcwevarnuxopipulvzsqilteuwbrivzihandabyzprbijhl",
-      dangerouslyAllowBrowser: true
+      dangerouslyAllowBrowser: true,
     });
 
     const response = await client.images.generate({
@@ -145,7 +157,7 @@ export default function FamousPeoplePage() {
       negative_prompt: "复杂背景, 文字, 模糊, 彩色, 细节过多",
       image_size: "1024x1024",
       num_inference_steps: 20,
-      guidance_scale: 7.5
+      guidance_scale: 7.5,
     });
 
     if (!response.data || !response.data[0]?.url) {
@@ -164,7 +176,7 @@ export default function FamousPeoplePage() {
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-12">
         {/* 页面标题 */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
@@ -195,7 +207,7 @@ export default function FamousPeoplePage() {
         {/* 名人信息卡片 */}
         {isGenerating && !famousPerson ? (
           // 加载状态
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             className="max-w-4xl mx-auto"
@@ -218,8 +230,11 @@ export default function FamousPeoplePage() {
                     <div className="h-6 bg-muted/70 rounded animate-pulse" />
                     <div className="h-48 bg-muted/50 rounded animate-pulse" />
                     <div className="space-y-3">
-                      {[1, 2, 3].map(i => (
-                        <div key={i} className="h-6 bg-muted/70 rounded animate-pulse" />
+                      {[1, 2, 3].map((i) => (
+                        <div
+                          key={i}
+                          className="h-6 bg-muted/70 rounded animate-pulse"
+                        />
                       ))}
                     </div>
                   </div>
@@ -229,7 +244,7 @@ export default function FamousPeoplePage() {
           </motion.div>
         ) : famousPerson ? (
           // 名人信息
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
@@ -243,135 +258,175 @@ export default function FamousPeoplePage() {
                   {famousPerson.name}
                 </CardTitle>
                 <p className="text-sm text-muted-foreground mt-1">
-                  <span className="font-medium">{famousPerson.nameEn}</span> • {famousPerson.field}
+                  <span className="font-medium">{famousPerson.nameEn}</span> •{" "}
+                  {famousPerson.field}
                 </p>
               </CardHeader>
-              
+
               <CardContent className="pt-4">
                 {/* 头像和发音信息并排布局 */}
-                  <div className="flex flex-col md:flex-row  items-start">
+                <div className="space-y-8">
+                  {/* 个人基本信息区域 */}
+                  <motion.div
+                    initial={{ scale: 0.9, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ duration: 0.5, delay: 0.2 }}
+                    className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full"
+                  >
                     {/* 左侧：头像和基本信息 */}
-                    <motion.div 
-                      initial={{ scale: 0.9, opacity: 0 }}
-                      animate={{ scale: 1, opacity: 1 }}
-                      transition={{ duration: 0.5, delay: 0.2 }}
-                      className="flex flex-col items-center shrink-0 w-full md:w-auto"
-                    >
-                      <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-primary/20 mb-4">
-                        <img 
-                          src={famousPerson.image} 
-                          alt={famousPerson.name} 
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
+                    <div className="md:col-span-1 space-y-6">
+                      {/* 头像区域 */}
+                      <div className="flex flex-col items-center">
+                        <div className="relative group">
+                          <div className="w-40 h-40 rounded-full overflow-hidden border-4 border-primary/30 shadow-lg transition-all duration-300 group-hover:shadow-xl">
+                            <img
+                              src={famousPerson.image}
+                              alt={famousPerson.name}
+                              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                            />
+                          </div>
+                          <div className="absolute -bottom-2 -right-2 bg-primary text-white w-10 h-10 rounded-full flex items-center justify-center shadow-md">
+                            <User className="h-5 w-5" />
+                          </div>
+                        </div>
                         
-                      {/* 基本信息 */}
-                      <div className="grid grid-cols-1 gap-4 w-full max-w-xs">
-                        <div className="flex items-center gap-3">
-                        <Calendar className="h-5 w-5 text-primary flex-shrink-0" />
-                        <div>
-                          <p className="text-sm text-muted-foreground">出生年份</p>
-                          <p className="font-medium">{famousPerson.birthYear}</p>
+                        {/* 基本信息卡片 */}
+                        <div className="w-full bg-card rounded-xl p-4 border border-border shadow-sm">
+                          <h3 className="text-md font-semibold mb-3 text-center text-primary">基本信息</h3>
+                          
+                          {/* 出生年份 */}
+                          <div className="flex items-center gap-3 mb-3">
+                            <Calendar className="h-5 w-5 text-primary flex-shrink-0" />
+                            <div>
+                              <p className="text-xs text-muted-foreground">
+                                出生年份
+                              </p>
+                              <p className="font-medium">
+                                {famousPerson.birthYear}
+                              </p>
+                            </div>
+                          </div>
+
+                          {/* 出生地 */}
+                          <div className="flex items-center gap-3">
+                            <Globe className="h-5 w-5 text-primary flex-shrink-0" />
+                            <div>
+                              <p className="text-xs text-muted-foreground">
+                                出生地
+                              </p>
+                              <p className="font-medium">
+                                {famousPerson.birthPlace}
+                              </p>
+                            </div>
+                          </div>
                         </div>
                       </div>
-                      <div className="flex items-center gap-3">
-                        <Globe className="h-5 w-5 text-primary flex-shrink-0" />
-                        <div>
-                          <p className="text-sm text-muted-foreground">出生地</p>
-                          <p className="font-medium">{famousPerson.birthPlace}</p>
-                        </div>
-                      </div>
-                      
-                      {/* 名人名言 */}
-                      {famousPerson.quotes && (
-                        <motion.div 
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.5, delay: 0.5 }}
-                          className="mt-6 mb-6 bg-primary/5 border border-primary/20 rounded-lg p-4 w-full"
-                        >
-                          <blockquote className="italic text-muted-foreground text-sm">
-                            "{famousPerson.quotes}"
-                          </blockquote>
-                          <p className="text-right font-medium text-sm mt-2">— {famousPerson.name}</p>
-                        </motion.div>
-                      )}
                     </div>
-                    
-                    {/* 人物简介 */}
-                    <motion.div 
+
+                    {/* 中间：人物简介 */}
+                    <motion.div
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ duration: 0.5, delay: 0.3 }}
-                      className="mb-8 w-full max-w-xs"
+                      className="md:col-span-1 bg-card rounded-xl p-5 border border-border shadow-sm"
                     >
-                      <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
-                        <BookOpen className="h-5 w-5 text-primary" />
+                      <h3 className="text-xl font-bold mb-3 flex items-center gap-2 text-primary">
+                        <BookOpen className="h-5 w-5" />
                         人物简介
                       </h3>
                       <p className="text-muted-foreground leading-relaxed">
                         {famousPerson.description}
                       </p>
                     </motion.div>
-                    
-                    {/* 主要成就 */}
-                    <motion.div 
+
+                    {/* 右侧：主要成就 */}
+                    <motion.div
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ duration: 0.5, delay: 0.4 }}
-                      className="mb-8 w-full max-w-xs"
+                      className="md:col-span-1 bg-card rounded-xl p-5 border border-border shadow-sm"
                     >
-                      <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
-                        <Users className="h-5 w-5 text-primary" />
+                      <h3 className="text-xl font-bold mb-4 flex items-center gap-2 text-primary">
+                        <Users className="h-5 w-5" />
                         主要成就
                       </h3>
-                      <ul className="space-y-2">
+                      <ul className="space-y-3">
                         {famousPerson.achievements.map((achievement, index) => (
-                          <motion.li 
+                          <motion.li
                             key={index}
                             initial={{ x: -10, opacity: 0 }}
                             animate={{ x: 0, opacity: 1 }}
-                            transition={{ duration: 0.3, delay: 0.4 + index * 0.1 }}
+                            transition={{
+                              duration: 0.3,
+                              delay: 0.4 + index * 0.1,
+                            }}
                             className="flex items-start gap-3"
                           >
-                            <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary text-sm font-medium mt-0.5 flex-shrink-0">
+                            <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-primary/20 text-primary text-sm font-medium mt-0.5 flex-shrink-0">
                               {index + 1}
                             </span>
-                            <span className="text-muted-foreground">{achievement}</span>
+                            <span className="text-muted-foreground leading-relaxed">
+                              {achievement}
+                            </span>
                           </motion.li>
                         ))}
                       </ul>
                     </motion.div>
                   </motion.div>
+
+                  {/* 名人名言 - 居中强调展示 */}
+                  {famousPerson.quotes && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.7, delay: 0.5 }}
+                      className="mt-6 mb-6 bg-gradient-to-r from-primary/5 to-primary/10 border border-primary/30 rounded-xl p-6 md:p-8 w-full shadow-sm relative overflow-hidden"
+                    >
+                      <div className="absolute top-3 left-3 text-4xl text-primary/10 font-serif">
+                        "
+                      </div>
+                      <blockquote className="italic text-muted-foreground text-base md:text-lg pl-6 relative z-10">
+                        {famousPerson.quotes}
+                      </blockquote>
+                      <p className="text-right font-semibold text-primary mt-3 pr-4">
+                        — {famousPerson.name}
+                      </p>
+                    </motion.div>
+                  )}
                   
-                  {/* 右侧：中文发音组件 */}
+                  {/* 中文发音组件 */}
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: 0.3 }}
-                    className="flex-1 w-full pl-4"
+                    transition={{ duration: 0.5, delay: 0.6 }}
                   >
-                    <PronunciationResult 
-                      type="cn" 
-                      value={famousPerson.name} 
-                      isLoading={false} 
+                    <PronunciationResult
+                      type="cn"
+                      value={famousPerson.name}
+                      isLoading={false}
                       result={{
                         chinese: famousPerson.name,
                         pinyin: famousPerson.pronunciation,
-                        chineseIpa: famousPerson.chineseIpa || `/${famousPerson.pronunciation}/`,
-                        englishPhonetic: famousPerson.englishPhonetic || famousPerson.pronunciation,
-                        matchedWords: famousPerson.matchedWords || [famousPerson.nameEn.split(' ')[0] || 'Example'],
-                        pronunciationNote: famousPerson.pronunciationNote || `这是${famousPerson.name}的标准中文发音。${famousPerson.field}家${famousPerson.name}出生于${famousPerson.birthYear}年。`,
+                        chineseIpa:
+                          famousPerson.chineseIpa ||
+                          `/${famousPerson.pronunciation}/`,
+                        englishPhonetic:
+                          famousPerson.englishPhonetic ||
+                          famousPerson.pronunciation,
+                        matchedWords: famousPerson.matchedWords || [
+                          famousPerson.nameEn.split(" ")[0] || "Example",
+                        ],
+                        pronunciationNote:
+                          famousPerson.pronunciationNote ||
+                          `这是${famousPerson.name}的标准中文发音。${famousPerson.field}家${famousPerson.name}出生于${famousPerson.birthYear}年。`,
                         example: famousPerson.example || {
                           chinese: `${famousPerson.name}是著名的${famousPerson.field}家。`,
-                          english: `${famousPerson.nameEn} is a famous ${famousPerson.field}.`
-                        }
+                          english: `${famousPerson.nameEn} is a famous ${famousPerson.field}.`,
+                        },
                       }}
                     />
                   </motion.div>
                 </div>
-                
-
               </CardContent>
             </Card>
           </motion.div>
