@@ -29,19 +29,7 @@ import {
   AlertTriangle
 } from "lucide-react";
 
-interface GenerationBatch {
-  id: string;
-  englishName: string;
-  gender: string;
-  birthYear?: string;
-  personalityTraits?: string;
-  namePreferences?: string;
-  planType: string;
-  totalNamesGenerated: number;
-  creditsUsed: number;
-  createdAt: string;
-  updatedAt: string;
-}
+import { getUserSearchHistory, deleteSearchHistory, SearchHistoryRecord } from "@/utils/search-history-utils";
 
 interface SavedName {
   id: string;
@@ -70,13 +58,13 @@ export default function ProfilePage() {
   const { user, loading } = useUser();
   const { toast } = useToast();
   
-  const [generationHistory, setGenerationHistory] = useState<GenerationBatch[]>([]);
+  const [searchHistory, setSearchHistory] = useState<SearchHistoryRecord[]>([]);
   const [savedNames, setSavedNames] = useState<SavedName[]>([]);
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
   const [isLoadingSaved, setIsLoadingSaved] = useState(false);
   const [activeTab, setActiveTab] = useState("history");
-  const [deletingBatchId, setDeletingBatchId] = useState<string | null>(null);
-  const [batchToDelete, setBatchToDelete] = useState<GenerationBatch | null>(null);
+  const [deletingHistoryId, setDeletingHistoryId] = useState<string | null>(null);
+  const [historyToDelete, setHistoryToDelete] = useState<SearchHistoryRecord | null>(null);
 
   useEffect(() => {
     if (!loading && !user) {
@@ -85,24 +73,21 @@ export default function ProfilePage() {
     }
     
     if (user) {
-      loadGenerationHistory();
+      loadSearchHistory();
       loadSavedNames();
     }
   }, [user, loading, router]);
 
-  const loadGenerationHistory = async () => {
+  const loadSearchHistory = async () => {
     setIsLoadingHistory(true);
     try {
-      const response = await fetch('/api/generation-batches?page=0&limit=50');
-      if (response.ok) {
-        const data = await response.json();
-        setGenerationHistory(data.batches || []);
-      }
+      const history = await getUserSearchHistory(50);
+      setSearchHistory(history);
     } catch (error) {
-      console.error('Failed to load generation history:', error);
+      console.error('Failed to load search history:', error);
       toast({
         title: "Loading Failed",
-        description: "Unable to load generation history. Please try again.",
+        description: "Unable to load search history. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -140,56 +125,64 @@ export default function ProfilePage() {
     });
   };
 
-  const getPlanTypeName = (planType: string) => {
-    return planType === '4' ? 'Premium' : 'Standard';
+  const getSearchTypeLabel = (searchType: string) => {
+    switch (searchType) {
+      case 'famous_person_search':
+        return 'Famous Person';
+      case 'pronunciation_search':
+        return 'Pronunciation';
+      default:
+        return 'Other';
+    }
   };
 
-  const getPlanTypeColor = (planType: string) => {
-    return planType === '4' ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700';
+  const getSearchTypeColor = (searchType: string) => {
+    switch (searchType) {
+      case 'famous_person_search':
+        return 'bg-amber-100 text-amber-700';
+      case 'pronunciation_search':
+        return 'bg-green-100 text-green-700';
+      default:
+        return 'bg-gray-100 text-gray-700';
+    }
   };
 
-  const handleViewBatch = (batchId: string) => {
-    router.push(`/profile/batch/${batchId}`);
+  const handleDeleteHistory = async (history: SearchHistoryRecord) => {
+    setHistoryToDelete(history);
   };
 
-  const handleDeleteBatch = async (batch: GenerationBatch) => {
-    setBatchToDelete(batch);
-  };
-
-  const confirmDeleteBatch = async () => {
-    if (!batchToDelete) return;
+  const confirmDeleteHistory = async () => {
+    if (!historyToDelete?.id) return;
     
-    setDeletingBatchId(batchToDelete.id);
+    setDeletingHistoryId(historyToDelete.id);
     try {
-      const response = await fetch(`/api/generation-batches?id=${batchToDelete.id}`, {
-        method: 'DELETE'
-      });
+      const success = await deleteSearchHistory(historyToDelete.id);
       
-      if (response.ok) {
+      if (success) {
         // Remove from local state
-        setGenerationHistory(prev => prev.filter(b => b.id !== batchToDelete.id));
+        setSearchHistory(prev => prev.filter(h => h.id !== historyToDelete.id));
         toast({
           title: "Deleted Successfully",
-          description: `Generation record for "${batchToDelete.englishName}" has been deleted.`,
+          description: `Search record for "${historyToDelete.search_query}" has been deleted.`,
         });
       } else {
         throw new Error('Failed to delete');
       }
     } catch (error) {
-      console.error('Failed to delete batch:', error);
+      console.error('Failed to delete search history:', error);
       toast({
         title: "Delete Failed",
-        description: "Unable to delete generation record. Please try again.",
+        description: "Unable to delete search record. Please try again.",
         variant: "destructive",
       });
     } finally {
-      setDeletingBatchId(null);
-      setBatchToDelete(null);
+      setDeletingHistoryId(null);
+      setHistoryToDelete(null);
     }
   };
 
   const cancelDelete = () => {
-    setBatchToDelete(null);
+    setHistoryToDelete(null);
   };
 
   if (loading) {
@@ -239,7 +232,7 @@ export default function ProfilePage() {
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="history" className="gap-2">
                 <Search className="h-4 w-4" />
-                Generation History ({generationHistory.length})
+                Search History ({searchHistory.length})
               </TabsTrigger>
               <TabsTrigger value="saved" className="gap-2">
                 <Heart className="h-4 w-4" />
@@ -247,12 +240,12 @@ export default function ProfilePage() {
               </TabsTrigger>
             </TabsList>
 
-            {/* Generation History Tab */}
+            {/* Search History Tab */}
             <TabsContent value="history" className="space-y-4">
               <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-bold">Generation History</h2>
+                <h2 className="text-2xl font-bold">Search History</h2>
                 <Badge variant="secondary">
-                  {generationHistory.length} generations total
+                  {searchHistory.length} searches total
                 </Badge>
               </div>
 
@@ -270,11 +263,11 @@ export default function ProfilePage() {
                     </Card>
                   ))}
                 </div>
-              ) : generationHistory.length === 0 ? (
+              ) : searchHistory.length === 0 ? (
                 <Card>
                   <CardContent className="p-12 text-center">
                     <Search className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                    <h3 className="text-lg font-medium mb-2">No Generation History</h3>
+                    <h3 className="text-lg font-medium mb-2">No Search History</h3>
                     <p className="text-muted-foreground mb-4">
                       Start generating your first Chinese name!
                     </p>
@@ -285,58 +278,42 @@ export default function ProfilePage() {
                 </Card>
               ) : (
                 <div className="space-y-4">
-                  {generationHistory.map((batch) => (
+                  {searchHistory.map((history) => (
                     <motion.div
-                      key={batch.id}
+                      key={history.id}
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       className="group"
                     >
-                      <Card className="hover:shadow-md transition-shadow relative group">
+                      <Card className="hover:shadow-md transition-shadow">
                         <CardContent className="p-6">
                           <div className="flex items-start justify-between">
-                            <div className="space-y-3 flex-1 cursor-pointer" onClick={() => handleViewBatch(batch.id)}>
+                            <div className="space-y-3 flex-1">
                               <div className="flex items-center gap-3">
-                                <h3 className="text-xl font-semibold">{batch.englishName}</h3>
-                                <Badge className={getPlanTypeColor(batch.planType)}>
-                                  {getPlanTypeName(batch.planType)}
-                                </Badge>
-                                <Badge variant="outline">
-                                  {batch.gender === 'male' ? 'Male' : batch.gender === 'female' ? 'Female' : 'Other'}
+                                <h3 className="text-xl font-semibold">{history.search_query}</h3>
+                                <Badge className={getSearchTypeColor(history.search_type)}>
+                                  {getSearchTypeLabel(history.search_type)}
                                 </Badge>
                               </div>
-                              
+                               
                               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-muted-foreground">
-                                {batch.birthYear && (
-                                  <div className="flex items-center gap-2">
-                                    <Calendar className="h-4 w-4" />
-                                    Birth Year: {batch.birthYear}
-                                  </div>
-                                )}
-                                <div className="flex items-center gap-2">
-                                  <Search className="h-4 w-4" />
-                                  Generated {batch.totalNamesGenerated} names
-                                </div>
                                 <div className="flex items-center gap-2">
                                   <Clock className="h-4 w-4" />
-                                  {formatDate(batch.createdAt)}
+                                  {formatDate(history.metadata?.search_date || new Date().toISOString())}
                                 </div>
+                                {history.metadata?.results_count && (
+                                  <div className="flex items-center gap-2">
+                                    <Search className="h-4 w-4" />
+                                    {history.metadata.results_count} results
+                                  </div>
+                                )}
                               </div>
 
-                              {batch.personalityTraits && (
+                              {history.metadata?.additional_info && (
                                 <div className="bg-muted/50 rounded-lg p-3">
                                   <p className="text-sm">
-                                    <span className="font-medium">Personality: </span>
-                                    {batch.personalityTraits}
-                                  </p>
-                                </div>
-                              )}
-
-                              {batch.namePreferences && (
-                                <div className="bg-muted/50 rounded-lg p-3">
-                                  <p className="text-sm">
-                                    <span className="font-medium">Preferences: </span>
-                                    {batch.namePreferences}
+                                    <span className="font-medium">Details: </span>
+                                    {history.metadata.additional_info}
                                   </p>
                                 </div>
                               )}
@@ -348,18 +325,17 @@ export default function ProfilePage() {
                                 size="sm"
                                 onClick={(e) => {
                                   e.stopPropagation();
-                                  handleDeleteBatch(batch);
+                                  handleDeleteHistory(history);
                                 }}
-                                disabled={deletingBatchId === batch.id}
+                                disabled={deletingHistoryId === history.id}
                                 className="h-8 w-8 p-0 text-muted-foreground hover:text-red-600 opacity-0 group-hover:opacity-100 transition-all"
                               >
-                                {deletingBatchId === batch.id ? (
+                                {deletingHistoryId === history.id ? (
                                   <div className="w-4 h-4 border border-current border-t-transparent rounded-full animate-spin" />
                                 ) : (
                                   <Trash2 className="h-4 w-4" />
                                 )}
                               </Button>
-                              <ChevronRight className="h-5 w-5 text-muted-foreground group-hover:text-foreground transition-colors" />
                             </div>
                           </div>
                         </CardContent>
@@ -447,19 +423,18 @@ export default function ProfilePage() {
       </div>
 
       {/* Delete Confirmation Dialog */}
-      <Dialog open={!!batchToDelete} onOpenChange={() => cancelDelete()}>
+      <Dialog open={!!historyToDelete} onOpenChange={() => cancelDelete()}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <AlertTriangle className="h-5 w-5 text-red-600" />
-              Delete Generation Record
+              Delete Search Record
             </DialogTitle>
             <DialogDescription className="space-y-2">
-              Are you sure you want to delete the generation record for{" "}
-              <span className="font-semibold">{batchToDelete?.englishName}</span>?
+              Are you sure you want to delete this search record?
               <br />
               <span className="text-sm text-muted-foreground">
-                This will permanently delete all {batchToDelete?.totalNamesGenerated} generated names 
+                This will permanently delete the search record for "{historyToDelete?.search_query}" 
                 and cannot be undone.
               </span>
             </DialogDescription>
@@ -469,7 +444,7 @@ export default function ProfilePage() {
               Cancel
             </Button>
             <Button
-              onClick={confirmDeleteBatch}
+              onClick={confirmDeleteHistory}
               className="bg-red-600 hover:bg-red-700 text-white"
             >
               Delete Record

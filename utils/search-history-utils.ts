@@ -92,8 +92,12 @@ export async function getUserSearchHistory(
       .select('*')
       .eq('user_id', user.id)
       .order('search_date', { ascending: false })
-      .limit(limit)
-      .offset(offset);
+      .limit(limit);
+    
+    // 使用 range 方法替代 offset，兼容新版本的 Supabase 客户端
+    if (offset > 0) {
+      query = query.range(offset, offset + limit - 1);
+    }
     
     // 如果指定了搜索类型，添加过滤器
     if (searchType) {
