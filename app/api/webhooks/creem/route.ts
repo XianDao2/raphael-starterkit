@@ -133,6 +133,17 @@ async function handleSubscriptionPaid(event: CreemWebhookEvent) {
       subscription.metadata?.user_id
     );
     await createOrUpdateSubscription(subscription, customerId);
+    
+    // Add credits if available in metadata
+    if (subscription.metadata?.credits && typeof subscription.metadata.credits === 'number') {
+      console.log(`Adding ${subscription.metadata.credits} credits to customer ${customerId}`);
+      await addCreditsToCustomer(
+        customerId,
+        subscription.metadata.credits,
+        subscription.id,
+        `Subscription payment - ${subscription.metadata.credits} credits`
+      );
+    }
   } catch (error) {
     console.error("Error handling subscription paid:", error);
     throw error;
