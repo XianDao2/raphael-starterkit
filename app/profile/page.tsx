@@ -285,7 +285,10 @@ export default function ProfilePage() {
                       animate={{ opacity: 1, y: 0 }}
                       className="group"
                     >
-                      <Card className="hover:shadow-md transition-shadow">
+                      <Card 
+                        className="hover:shadow-md transition-all cursor-pointer hover:border-primary/50"
+                        onClick={() => router.push(`/profile/history/${history.id}`)}
+                      >
                         <CardContent className="p-6">
                           <div className="flex items-start justify-between">
                             <div className="space-y-3 flex-1">
@@ -295,7 +298,7 @@ export default function ProfilePage() {
                                   {getSearchTypeLabel(history.search_type)}
                                 </Badge>
                               </div>
-                               
+                                
                               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-muted-foreground">
                                 <div className="flex items-center gap-2">
                                   <Clock className="h-4 w-4" />
@@ -307,6 +310,10 @@ export default function ProfilePage() {
                                     {history.metadata.results_count} results
                                   </div>
                                 )}
+                                <div className="hidden md:flex items-center gap-1 text-primary/70 group-hover:text-primary">
+                                  <span className="text-xs">View Details</span>
+                                  <ChevronRight className="h-3 w-3" />
+                                </div>
                               </div>
 
                               {history.metadata?.additional_info && (
