@@ -319,7 +319,7 @@ const SearchHistoryDetail = () => {
                           <h3 className="text-xl font-semibold text-foreground">相似发音 (Similar Pronunciations)</h3>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                          {historyDetail.search_results.matchedWords && historyDetail.search_results.matchedWords.map((words, index) => (
+                          {historyDetail.search_results.matchedWords && historyDetail.search_results.matchedWords.map((words:any, index:any) => (
                             <div
                               key={index}
                               className="flex flex-col items-center justify-center bg-white dark:bg-background p-6 rounded-xl border border-border shadow-sm hover:shadow-md transition-all duration-300 hover:border-primary/30"
@@ -525,7 +525,7 @@ const SearchHistoryDetail = () => {
                               <div className="mt-4">
                                 <h3 className="text-sm font-medium text-muted-foreground mb-3">匹配发音词 / Matched Words</h3>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                  {Array.isArray(historyDetail.search_results.matchedWords) && historyDetail.search_results.matchedWords.map((word, index) => (
+                                  {Array.isArray(historyDetail.search_results.matchedWords) && historyDetail.search_results.matchedWords.map((word:any, index:any) => (
                                     <div key={index} className="flex items-center gap-2 bg-background p-3 rounded-lg border border-border">
                                       <span className="text-primary font-medium">{word}</span>
                                       <button

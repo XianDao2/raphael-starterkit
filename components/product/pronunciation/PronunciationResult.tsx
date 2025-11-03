@@ -190,7 +190,7 @@ const PronunciationResult: React.FC<PronunciationResultProps> = ({ type, value, 
               transition={{ delay: 0.2 }}
             >
               <div className="flex-1">
-                {result.translation && (
+                {result && result.translation && (
                   <div className="mb-3">
                     <p className="text-sm font-medium text-muted-foreground uppercase tracking-wider">原文</p>
                     <p className="text-xl text-foreground italic font-light">{result.translation}</p>
@@ -198,17 +198,17 @@ const PronunciationResult: React.FC<PronunciationResultProps> = ({ type, value, 
                 )}
                 <div className="flex items-center flex-wrap gap-4 mb-2">
                   <h1 className="text-4xl md:text-5xl font-chinese text-foreground">
-                    {result.chinese}
+                    {result &&result.chinese}
                   </h1>
                   <motion.div
                     className="inline-flex items-center px-3 py-1.5 bg-primary/10 text-primary rounded-full text-sm font-medium"
                     whileHover={{ scale: 1.05, backgroundColor: 'rgba(var(--primary), 0.2)' }}
                   >
-                    {result.chineseIpa}
+                    {result &&result.chineseIpa}
                   </motion.div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <p className="text-lg text-muted-foreground font-medium">{result.pinyin}</p>
+                  <p className="text-lg text-muted-foreground font-medium">{result &&result.pinyin}</p>
                 </div>
               </div>
               <div className="flex flex-col items-center">
@@ -252,7 +252,7 @@ const PronunciationResult: React.FC<PronunciationResultProps> = ({ type, value, 
                 <h3 className="text-xl font-semibold text-foreground">相似发音 (Similar Pronunciations)</h3>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {result.matchedWords.map((words, index) => (
+                {result &&result.matchedWords.map((words, index) => (
                   <motion.div
                     key={index}
                     className="flex flex-col items-center justify-center bg-white dark:bg-background p-6 rounded-xl border border-border shadow-sm hover:shadow-md transition-all duration-300 hover:border-primary/30"
@@ -282,10 +282,10 @@ const PronunciationResult: React.FC<PronunciationResultProps> = ({ type, value, 
                     <p className="text-sm font-medium text-muted-foreground mb-1">发音比较</p>
                     <div className="flex flex-wrap gap-2">
                       <span className="text-sm font-medium text-foreground">
-                        中文: <span className="font-mono text-primary">{result.chineseIpa}</span>
+                        中文: <span className="font-mono text-primary">{result &&result.chineseIpa}</span>
                       </span>
                       <span className="text-sm font-medium text-foreground">
-                        英语: <span className="font-mono text-primary">{result.englishPhonetic}</span>
+                        英语: <span className="font-mono text-primary">{result &&result.englishPhonetic}</span>
                       </span>
                     </div>
                   </div>
@@ -302,7 +302,7 @@ const PronunciationResult: React.FC<PronunciationResultProps> = ({ type, value, 
             >
               <h4 className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-2">发音指南</h4>
               <p className="text-muted-foreground text-base leading-relaxed">
-                {result.pronunciationNote}
+                {result &&result.pronunciationNote}
               </p>
             </motion.div>
 
@@ -458,12 +458,12 @@ const PronunciationResult: React.FC<PronunciationResultProps> = ({ type, value, 
                 >
                   <div className="flex flex-col gap-3">
                     <p className="font-chinese text-xl text-foreground">
-                      {result.example.chinese}
+                      {result &&result.example.chinese}
                     </p>
-                    <p className="text-muted-foreground">{result.pinyin}</p>
+                    <p className="text-muted-foreground">{result &&result.pinyin}</p>
                     <div className="mt-2 p-4 bg-muted/20 rounded-lg">
                       <p className="text-muted-foreground italic text-lg">
-                        "{result.example.english}"
+                        "{result &&result.example.english}"
                       </p>
                     </div>
                   </div>

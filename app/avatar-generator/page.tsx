@@ -94,7 +94,8 @@ export default function AvatarGeneratorPage() {
             ? [customerData.subscriptions]
             : [];
         const activeSubscription = subscriptions.find(
-          (sub) => sub && ACTIVE_STATUSES.includes(sub.status as string)
+          (sub: { status?: string; creem_product_id?: string } | null | undefined) => 
+            sub && ACTIVE_STATUSES.includes(sub.status as "active" | "trialing")
         );
 
         // 检查是否为Premium订阅
@@ -215,10 +216,6 @@ export default function AvatarGeneratorPage() {
       const response = await client.images.generate({
         model: "Kwai-Kolors/Kolors",
         prompt: description,
-        negative_prompt: "模糊, 扭曲, 低质量, 不完整",
-        image_size: "1024x1024",
-        num_inference_steps: 20,
-        guidance_scale: 7.5
       });
 
       // OpenAI客户端直接返回结果对象，不需要json()解析

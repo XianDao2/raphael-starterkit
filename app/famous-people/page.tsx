@@ -179,10 +179,6 @@ export default function FamousPeoplePage() {
     const response = await client.images.generate({
       model: "Kwai-Kolors/Kolors",
       prompt: prompt,
-      negative_prompt: "复杂背景, 文字, 模糊, 彩色, 细节过多",
-      image_size: "1024x1024",
-      num_inference_steps: 20,
-      guidance_scale: 7.5,
     });
 
     if (!response.data || !response.data[0]?.url) {
